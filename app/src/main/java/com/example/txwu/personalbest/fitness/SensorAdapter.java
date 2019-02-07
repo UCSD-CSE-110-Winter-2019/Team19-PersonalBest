@@ -103,8 +103,6 @@ public class SensorAdapter implements FitnessService, SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Toast.makeText(activity, "Sensor detected!", Toast.LENGTH_SHORT).show();
-
         /* https://github.com/bagilevi/android-pedometer/blob/master/src/name/bagi/levente/pedometer/StepDetector.java */
         Sensor sensor = event.sensor;
         synchronized (this) {
