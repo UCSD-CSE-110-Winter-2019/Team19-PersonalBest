@@ -8,8 +8,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.txwu.personalbest.fitness.SensorAdapter;
+import com.example.txwu.personalbest.fitness.FitnessService;
+import com.example.txwu.personalbest.fitness.FitnessServiceFactory;
+import com.example.txwu.personalbest.fitness.StepTracker;
+
+import java.util.Observable;
+import java.util.Observer;
+
+public class MainActivity extends AppCompatActivity implements Observer {
+    private String fitnessServiceKey = "GOOGLE_FIT";
+
+    public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
+
+    private static final String TAG = "StepCountActivity";
+
+    private TextView textSteps;
+    private TextView textTest;
+    private boolean testFlag = false;
+    private FitnessService fitnessService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +45,42 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        textSteps = findViewById(R.id.textSteps);
+        textTest = findViewById(R.id.textView2);
+
+        FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
+            @Override
+            public FitnessService create(MainActivity activity) {
+                return new SensorAdapter(activity);
+            }
+        });
+
+        fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
+
+        fitnessService.setup();
+
+        StepTracker stepTracker = new StepTracker(fitnessService);
+        stepTracker.addObserver(this);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        final long steps = (long) arg;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textSteps.setText(String.valueOf(steps));
+                if (testFlag) {
+                    textTest.setText("yo");
+                } else {
+                    textTest.setText("hey");
+                }
+                testFlag = !testFlag;
+            }
+        });
+        // TODO put notifications here
+        //warningService.update(o, arg);
     }
 
     @Override
