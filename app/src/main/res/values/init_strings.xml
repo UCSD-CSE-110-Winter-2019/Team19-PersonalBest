@@ -3,6 +3,7 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="user_agree">I agree.</string>
     <string name="permissions">To provide aspects of its functionality, PersonalBest may collect data on the following:</string>
+    <string name="permission1">- Location</string>
     <string name="privacy_notice">Privacy Notice</string>
     <string name="next">NEXT ></string>
 </resources>

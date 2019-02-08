@@ -1,5 +1,7 @@
 package com.example.txwu.personalbest;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,21 +13,20 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SharedPreferences prefs = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        prefs = getSharedPreferences("com.exmaple.txwu.personalbest", MODE_PRIVATE);
+
+        // Start init activity if first time opening
+        if (!prefs.getBoolean("accepted_terms_and_privacy", false)) {
+            Intent i = new Intent(getApplicationContext(), InitActivity.class);
+            startActivity(i);
+        }
     }
 
     @Override
