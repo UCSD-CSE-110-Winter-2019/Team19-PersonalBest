@@ -1,21 +1,28 @@
 package com.example.txwu.personalbest.fitness;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.TriggerEvent;
 import android.hardware.TriggerEventListener;
+import android.os.Binder;
+import android.os.Handler;
+import android.os.IBinder;
 import android.widget.Toast;
 
 import com.example.txwu.personalbest.MainActivity;
 
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.SENSOR_SERVICE;
 
-public class SensorAdapter implements FitnessService, SensorEventListener {
+public class SensorAdapter extends Service implements FitnessService, SensorEventListener {
     private MainActivity activity;
 
     public SensorAdapter(MainActivity activity) {
@@ -65,13 +72,14 @@ public class SensorAdapter implements FitnessService, SensorEventListener {
 
         motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
 
-        if (motionSensor == null) {
+/*        if (motionSensor == null) {
             Toast.makeText(activity, "No Motion Sensor!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(activity, "We have Motion Sensor!", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
-        steps = 0;
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+        steps = sharedPreferences.getInt("steps", 0);
 
         listener = new TriggerEventListener() {
             @Override
@@ -86,13 +94,8 @@ public class SensorAdapter implements FitnessService, SensorEventListener {
 
         accelSensor =  sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-        /* https://github.com/bagilevi/android-pedometer/blob/master/src/name/bagi/levente/pedometer/StepDetector.java */
-        int h = 480; // TODO: remove this constant
-        mYOffset = h * 0.5f;
-        mScale[0] = - (h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
-        mScale[1] = - (h * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
-        /* https://github.com/bagilevi/android-pedometer/blob/master/src/name/bagi/levente/pedometer/StepDetector.java */
+        pedometerSetup();
+        activity.update(null, steps);
     }
 
     @Override
@@ -101,8 +104,17 @@ public class SensorAdapter implements FitnessService, SensorEventListener {
         self.update(steps);
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
+    private void pedometerSetup() {
+        /* https://github.com/bagilevi/android-pedometer/blob/master/src/name/bagi/levente/pedometer/StepDetector.java */
+        int h = 480; // TODO: remove this constant
+        mYOffset = h * 0.5f;
+        mScale[0] = - (h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
+        mScale[1] = - (h * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
+        /* https://github.com/bagilevi/android-pedometer/blob/master/src/name/bagi/levente/pedometer/StepDetector.java */
+    }
+
+    private boolean pedometerUpdate(SensorEvent event) {
+        boolean update = false;
         /* https://github.com/bagilevi/android-pedometer/blob/master/src/name/bagi/levente/pedometer/StepDetector.java */
         Sensor sensor = event.sensor;
         synchronized (this) {
@@ -133,7 +145,7 @@ public class SensorAdapter implements FitnessService, SensorEventListener {
                             boolean isNotContra = (mLastMatch != 1 - extType);
 
                             if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
-                                steps++;
+                                update = true;
                                 mLastMatch = extType;
                             }
                             else {
@@ -147,11 +159,63 @@ public class SensorAdapter implements FitnessService, SensorEventListener {
                 }
             }
         }
+        return update;
         /* https://github.com/bagilevi/android-pedometer/blob/master/src/name/bagi/levente/pedometer/StepDetector.java */
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (pedometerUpdate(event)) {
+            steps++;
+
+            SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putInt("steps", (int) steps);
+
+            editor.apply();
+
+            activity.update(null, steps);
+        }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
+
+    private final LocalBinder mBinder = new LocalBinder();
+    protected Handler handler;
+    protected Toast mToast;
+
+    public class LocalBinder extends Binder {
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
+        return android.app.Service.START_STICKY;
+    }
+
 }

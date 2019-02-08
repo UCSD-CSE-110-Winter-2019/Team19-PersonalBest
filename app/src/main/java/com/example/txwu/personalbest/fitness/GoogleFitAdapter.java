@@ -49,6 +49,8 @@ public class GoogleFitAdapter implements FitnessService {
                     GoogleSignIn.getLastSignedInAccount(activity),
                     fitnessOptions);
         } else {
+            StepTracker stepTracker = new StepTracker(this);
+            stepTracker.addObserver(activity);
             startRecording();
         }
     }
