@@ -1,106 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".InitActivity">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="125dp"
+        android:contentDescription="@string/doggo"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pic" />
 
-        <ImageView
-            android:id="@+id/imageView1"
+    <ScrollView
+        android:id="@+id/terms_privacy_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/nextButton"
+        app:layout_constraintTop_toBottomOf="@id/imageView1">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="125dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pic" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="400dp">
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/disclaimerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                android:text="@string/disclaimer" />
 
-                <TextView
-                    android:id="@+id/disclaimerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/disclaimer" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp" />
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp" />
-
-                <TextView
-                    android:id="@+id/termsAndConditions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/terms_and_conditions" />
-
-                <CheckBox
-                    android:id="@+id/termsAndConditionsCheckbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_agree" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp" />
-
-                <TextView
-                    android:id="@+id/permissions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/permissions" />
-
-                <TextView
-                    android:id="@+id/permission1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:text="@string/permission1" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp" />
-
-                <TextView
-                    android:id="@+id/privacyNotice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/privacy_notice" />
-
-                <CheckBox
-                    android:id="@+id/privacyNoticeCheckbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_agree" />
-
-            </LinearLayout>
-        </ScrollView>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/nextButton"
+            <TextView
+                android:id="@+id/termsAndConditions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:enabled="false"
-                android:text="@string/next" />
-        </FrameLayout>
+                android:text="@string/terms_and_conditions"
+                android:textColor="@color/design_default_color_primary" />
 
-    </LinearLayout>
+            <CheckBox
+                android:id="@+id/termsAndConditionsCheckbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/user_agree" />
 
-</android.support.design.widget.CoordinatorLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:id="@+id/permissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/permissions" />
+
+            <TextView
+                android:id="@+id/permission1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/permission1" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:id="@+id/privacyNotice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/privacy_notice"
+                android:textColor="@color/design_default_color_primary" />
+
+            <CheckBox
+                android:id="@+id/privacyNoticeCheckbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/user_agree" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:enabled="false"
+        android:text="@string/next"
+        tools:layout_editor_absoluteY="519dp" />
+
+</android.support.constraint.ConstraintLayout>
