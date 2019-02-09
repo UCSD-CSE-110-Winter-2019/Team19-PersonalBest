@@ -2,6 +2,7 @@ package com.example.txwu.personalbest;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.txwu.personalbest.fitness.FitAdapterForWalk;
 import com.example.txwu.personalbest.fitness.FitnessService;
@@ -34,13 +35,18 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         walk = new Walk(time);
 
         fitnessService = FitAdapterForWalk.getInstance(this);
+        fitnessService.setup();
     }
 
     public void setSteps(long step) {
         walk.setSteps((int) step);
+        TextView step_count = findViewById(R.id.walk_step_counter);
+        step_count.setText(String.format("%d", walk.getSteps()));
     }
     public void setDistance(long distance) {
         walk.setDistance(distance);
+        TextView dist_count = findViewById(R.id.walk_distance);
+        dist_count.setText(String.format("%f", walk.getDistance()/1600));
     }
     public void setSpeed(long speed) {
         walk.setSpeed(speed);
