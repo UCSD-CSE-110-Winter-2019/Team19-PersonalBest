@@ -3,7 +3,6 @@
 *.ap_
 *.aab
 .idea/*
-.gitignore
 # Files for the ART/Dalvik VM
 *.dex
 
