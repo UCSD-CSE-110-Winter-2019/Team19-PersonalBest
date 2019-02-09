@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private TextView textSteps;
     private TextView textTest;
     private FitnessService fitnessService;
-    private Goal goal;
+    //private Goal goal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         textSteps = findViewById(R.id.textSteps);
 
-        goal = new Goal(this, new Date());
+        //goal = new Goal(this, new Date());
 
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                goal.setSteps(steps);
+                //goal.setSteps(steps);
                 if (isFirstTimeOpenApp) {
-                    goal.showMeetGoal(10);
+                    //goal.showMeetGoal(10);
                     isFirstTimeOpenApp = false;
                 }
                 textSteps.setText(String.valueOf(steps));
