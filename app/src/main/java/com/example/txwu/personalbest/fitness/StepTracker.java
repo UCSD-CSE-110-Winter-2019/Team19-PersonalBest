@@ -30,6 +30,8 @@ public class StepTracker extends Observable {
      * Cancel the timer
      */
     public void cancel() {
+
         t.cancel();
+        t.purge();
     }
 }
