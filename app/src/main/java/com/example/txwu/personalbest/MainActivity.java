@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.txwu.personalbest.fitness.GoogleFitAdapter;
 import com.example.txwu.personalbest.fitness.SensorAdapter;
 import com.example.txwu.personalbest.fitness.FitnessService;
 import com.example.txwu.personalbest.fitness.FitnessServiceFactory;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
             @Override
             public FitnessService create(MainActivity activity) {
-                return new SensorAdapter(activity);
+                return new GoogleFitAdapter(activity);
             }
         });
 
