@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".WalkActivity">
 
-<<<<<<< HEAD
-=======
     <RelativeLayout
         android:layout_height = "match_parent"
         android:layout_width = "match_parent"
@@ -77,5 +75,4 @@
 
     </RelativeLayout>
 
->>>>>>> 4da31d8eb34be914c0d7650281f174f363ec602b
 </android.support.constraint.ConstraintLayout>
