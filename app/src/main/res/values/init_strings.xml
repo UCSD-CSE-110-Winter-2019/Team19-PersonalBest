@@ -8,6 +8,12 @@
     <string name="next">NEXT ></string>
     <string name="doggo">cute doggo</string>
     <string name="close_pw">CLOSE</string>
+    <string name="height_info">Please enter your height so we can estimate your stride!</string>
+    <string name="height">Height</string>
+    <string-array name="length_array">
+        <item>in</item>
+        <item>cm</item>
+    </string-array>
     <string name="terms_and_conditions_text">CONDITIONS OF USE
 Welcome to our online store! MYCOMPANY and its associates provide their services to you subject to the following conditions. If you visit or shop within this website, you accept these conditions. Please read them carefully. ​
 

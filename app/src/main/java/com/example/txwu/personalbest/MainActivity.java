@@ -23,10 +23,13 @@ public class MainActivity extends AppCompatActivity {
         prefs = getSharedPreferences("com.exmaple.txwu.personalbest", MODE_PRIVATE);
 
         // Start init activity if first time opening
-        if (!prefs.getBoolean("accepted_terms_and_privacy", false)) {
-            Intent i = new Intent(getApplicationContext(), InitActivity.class);
+        Intent i;
+        if (!prefs.getBoolean("accepted_terms_and_privacy", false) || prefs.getLong("user_height", 0) == 0) {
+            i = new Intent(getApplicationContext(), InitActivity.class);
             startActivity(i);
         }
+        // else start main screen
+        // startActivity(i);
     }
 
     @Override

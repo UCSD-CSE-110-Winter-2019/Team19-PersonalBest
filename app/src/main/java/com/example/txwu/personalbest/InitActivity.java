@@ -4,15 +4,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class InitActivity extends AppCompatActivity {
@@ -21,7 +28,12 @@ public class InitActivity extends AppCompatActivity {
     private Button nextButton;
     private CheckBox termsCheckBox, privacyCheckBox;
     private TextView termsText, privacyText;
+    private ScrollView termsLayout, heightLayout;
+    private EditText heightInput;
+    private Spinner lengthSpinner;
     private PopupWindow pw;
+
+    private int state = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +50,21 @@ public class InitActivity extends AppCompatActivity {
         // text views
         termsText = findViewById(R.id.termsAndConditions);
         privacyText = findViewById(R.id.privacyNotice);
+
+        // layouts
+        termsLayout = findViewById(R.id.terms_privacy_layout);
+        heightLayout = findViewById(R.id.height_layout);
+
+        // input
+        heightInput = findViewById(R.id.height_input);
+
+        // spinner
+        lengthSpinner = findViewById(R.id.spinner);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.length_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        lengthSpinner.setAdapter(adapter);
 
         termsText.setText(R.string.terms_and_conditions);
         privacyText.setText(R.string.privacy_notice);
@@ -76,11 +103,56 @@ public class InitActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prefs.edit().putBoolean("accepted_terms_and_privacy", true).apply();
+                if (state == 0) {
+                    prefs.edit().putBoolean("accepted_terms_and_privacy", true).apply();
+                    nextState();
+                } else {
+                    long height = Long.parseLong(heightInput.getText().toString());
+                    prefs.edit().putLong("user_height", height).apply();
 
-                finish();
+                    String unit = lengthSpinner.getSelectedItem().toString();
+                    prefs.edit().putString("user_measurement_unit", unit).apply();
+
+                    endActivity();
+                }
             }
         });
+
+        heightInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                nextButton.setEnabled(editable.toString().length() > 1);
+            }
+        });
+
+        if (prefs.getBoolean("accepted_terms_and_privacy", false)) {
+            nextState();
+            if (prefs.getLong("user_height", 0) != 0) {
+                endActivity();
+            }
+        }
+    }
+
+    private void endActivity() {
+        // go to main activity or main screen
+        finish();
+    }
+
+    private void nextState() {
+        termsLayout.setVisibility(View.GONE);
+        heightLayout.setVisibility(View.VISIBLE);
+        nextButton.setEnabled(false);
+        state = 1;
     }
 
     private void initiatePopupWindow(View v, int msg) {
@@ -110,7 +182,7 @@ public class InitActivity extends AppCompatActivity {
     };
 
     private void updateNextButton() {
-        nextButton.setEnabled(termsCheckBox.isChecked() && privacyCheckBox.isChecked());
+        nextButton.setEnabled(state == 0 && termsCheckBox.isChecked() && privacyCheckBox.isChecked());
     }
 
 }
