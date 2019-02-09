@@ -1,6 +1,7 @@
 package com.example.txwu.personalbest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.txwu.personalbest.fitness.GoogleFitAdapter;
@@ -77,6 +79,14 @@ public class MainActivity extends AppCompatActivity implements Observer {
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
 
         fitnessService.setup();
+
+        Button startWalk = (Button)findViewById(R.id.button);
+        startWalk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchWalkActivity();
+            }
+        });
     }
 
     private boolean isFirstTimeOpenApp = true;
@@ -119,5 +129,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Starts the WalkActivity
+     */
+    public void launchWalkActivity() {
+        Intent intent = new Intent(this, WalkActivity.class);
+        startActivity(intent);
     }
 }

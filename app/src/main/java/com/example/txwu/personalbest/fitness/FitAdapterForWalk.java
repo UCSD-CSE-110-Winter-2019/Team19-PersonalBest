@@ -10,6 +10,7 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
@@ -28,6 +29,7 @@ public class FitAdapterForWalk implements FitnessService {
 
     private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = System.identityHashCode(this) & 0xFFFF;
     private final String TAG = "FitAdapterForWalk";
+    StepTracker stepTracker;
     WalkActivity activity;
     Walk walk;
 
@@ -59,7 +61,7 @@ public class FitAdapterForWalk implements FitnessService {
                     GoogleSignIn.getLastSignedInAccount(activity),
                     fitnessOptions);
         } else {
-            StepTracker stepTracker = new StepTracker(this);
+            stepTracker = new StepTracker(this);
             stepTracker.addObserver(activity);
             startRecording();
         }
@@ -102,7 +104,7 @@ public class FitAdapterForWalk implements FitnessService {
 
         subScribeSteps();
         subScribeDistance();
-        subScribeSpeed();
+        //subScribeSpeed();
     }
 
     /**
@@ -130,7 +132,7 @@ public class FitAdapterForWalk implements FitnessService {
      */
     public void subScribeDistance() {
         Fitness.getRecordingClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
-                .subscribe(DataType.TYPE_DISTANCE_CUMULATIVE)
+                .subscribe(DataType.TYPE_DISTANCE_DELTA)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -140,7 +142,7 @@ public class FitAdapterForWalk implements FitnessService {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, "There was a problem subscribing distance.");
+                        Log.i(TAG, e.getMessage());
                     }
                 });
     }
@@ -160,7 +162,7 @@ public class FitAdapterForWalk implements FitnessService {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, "There was a problem subscribing speed.");
+                        Log.i(TAG, e.getMessage());
                     }
                 });
 
@@ -268,9 +270,10 @@ public class FitAdapterForWalk implements FitnessService {
                                         .getDataSet(DataType.AGGREGATE_DISTANCE_DELTA)
                                         .getDataPoints();
 
-                                int total = dataPoints.isEmpty()
+                                Log.d(TAG, "" + dataPoints.isEmpty());
+                                float total = dataPoints.isEmpty()
                                         ?0
-                                        :dataPoints.get(0).getValue(Field.FIELD_DISTANCE).asInt();
+                                        :dataPoints.get(0).getValue(Field.FIELD_DISTANCE).asFloat();
 
                                 activity.setDistance(total);
                             }
@@ -316,9 +319,9 @@ public class FitAdapterForWalk implements FitnessService {
                                         .getDataSet(DataType.AGGREGATE_SPEED_SUMMARY)
                                         .getDataPoints();
 
-                                int total = dataPoints.isEmpty()
+                                float total = dataPoints.isEmpty()
                                         ?0
-                                        :dataPoints.get(0).getValue(Field.FIELD_SPEED).asInt();
+                                        :dataPoints.get(0).getValue(Field.FIELD_AVERAGE).asFloat();
 
                                 activity.setSpeed(total);
                             }
@@ -344,5 +347,10 @@ public class FitAdapterForWalk implements FitnessService {
 
         else
             return new FitAdapterForWalk(walkActivity);
+    }
+
+    @Override
+    public void cancel() {
+        stepTracker.cancel();
     }
 }

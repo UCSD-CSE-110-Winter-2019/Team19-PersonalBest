@@ -25,4 +25,11 @@ public class StepTracker extends Observable {
     public void update(long total) {
         notifyObservers(total);
     }
+
+    /**
+     * Cancel the timer
+     */
+    public void cancel() {
+        t.cancel();
+    }
 }

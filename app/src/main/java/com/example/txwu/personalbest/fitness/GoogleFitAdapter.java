@@ -30,6 +30,7 @@ public class GoogleFitAdapter implements FitnessService {
     private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = System.identityHashCode(this) & 0xFFFF;
     private final String TAG = "GoogleFitAdapter";
 
+    StepTracker stepTracker;
     private MainActivity activity;
 
     public GoogleFitAdapter(MainActivity activity) {
@@ -50,7 +51,7 @@ public class GoogleFitAdapter implements FitnessService {
                     GoogleSignIn.getLastSignedInAccount(activity),
                     fitnessOptions);
         } else {
-            StepTracker stepTracker = new StepTracker(this);
+            stepTracker = new StepTracker(this);
             stepTracker.addObserver(activity);
             startRecording();
         }
@@ -181,5 +182,10 @@ public class GoogleFitAdapter implements FitnessService {
     @Override
     public int getRequestCode() {
         return GOOGLE_FIT_PERMISSIONS_REQUEST_CODE;
+    }
+
+    @Override
+    public void cancel() {
+        stepTracker.cancel();
     }
 }

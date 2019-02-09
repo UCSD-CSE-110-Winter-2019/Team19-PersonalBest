@@ -218,4 +218,7 @@ public class SensorAdapter extends Service implements FitnessService, SensorEven
         return android.app.Service.START_STICKY;
     }
 
+    @Override
+    public void cancel() {}
+
 }
