@@ -1,5 +1,8 @@
 package com.example.txwu.personalbest;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +19,7 @@ import com.example.txwu.personalbest.fitness.FitnessService;
 import com.example.txwu.personalbest.fitness.FitnessServiceFactory;
 import com.example.txwu.personalbest.fitness.StepTracker;
 
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,8 +32,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     private TextView textSteps;
     private TextView textTest;
-    private boolean testFlag = false;
     private FitnessService fitnessService;
+    private Goal goal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +52,34 @@ public class MainActivity extends AppCompatActivity implements Observer {
         });
 
         textSteps = findViewById(R.id.textSteps);
-        textTest = findViewById(R.id.textView2);
 
-        FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
-            @Override
-            public FitnessService create(MainActivity activity) {
-                return new GoogleFitAdapter(activity);
-            }
-        });
+        goal = new Goal(this, new Date());
+
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        if (stepSensor == null) {
+            FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
+                @Override
+                public FitnessService create(MainActivity activity) {
+                    return new SensorAdapter(activity);
+                }
+            });
+        } else {
+            FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
+                @Override
+                public FitnessService create(MainActivity activity) {
+                    return new GoogleFitAdapter(activity);
+                }
+            });
+        }
 
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
 
         fitnessService.setup();
-
-        StepTracker stepTracker = new StepTracker(fitnessService);
-        stepTracker.addObserver(this);
     }
+
+    private boolean isFirstTimeOpenApp = true;
 
     @Override
     public void update(Observable o, Object arg) {
@@ -71,13 +87,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textSteps.setText(String.valueOf(steps));
-                if (testFlag) {
-                    textTest.setText("yo");
-                } else {
-                    textTest.setText("hey");
+                goal.setSteps(steps);
+                if (isFirstTimeOpenApp) {
+                    goal.showMeetGoal(10);
+                    isFirstTimeOpenApp = false;
                 }
-                testFlag = !testFlag;
+                textSteps.setText(String.valueOf(steps));
             }
         });
         // TODO put notifications here
