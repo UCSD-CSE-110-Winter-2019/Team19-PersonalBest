@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.txwu.personalbest.fitness.FitAdapterForWalk;
 import com.example.txwu.personalbest.fitness.FitnessService;
@@ -67,7 +68,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         long minutes = seconds/60;
         seconds = seconds%60;
 
-        time.setText(String.format("%d:%d", minutes, seconds));
+        time.setText(String.format("%d:%02d", minutes, seconds));
         step_count.setText(String.format("%d", walk.getSteps()));
     }
 
@@ -112,6 +113,9 @@ public class WalkActivity extends AppCompatActivity implements Observer {
      */
     public void endWalk() {
         fitnessService.cancel();
+        TextView step_count = findViewById(R.id.walk_step_counter);
+        TextView time = findViewById(R.id.walk_time);
+        Toast.makeText(this, "Walk ended with " + step_count.getText() + " steps in " + time.getText() + ".", Toast.LENGTH_LONG).show();
         finish();
     }
 }
