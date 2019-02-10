@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
                 @Override
                 public FitnessService create(MainActivity activity) {
-                    return new SensorAdapter(activity);
+                    return new GoogleFitAdapter(activity);
                 }
             });
         } else {

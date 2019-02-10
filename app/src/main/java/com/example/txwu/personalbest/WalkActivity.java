@@ -44,7 +44,6 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         walk = new Walk(time);
 
         fitnessService = FitAdapterForWalk.getInstance(this);
-        fitnessService.setup();
         request_location_permission();
 
         Button end = findViewById(R.id.end_walk);
@@ -54,6 +53,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
                 endWalk();
             }
         });
+        fitnessService.setup();
     }
 
     /**
