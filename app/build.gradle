@@ -21,6 +21,9 @@ android {
             includeAndroidResources = true
         }
     }
+    lintOptions {
+        disable 'GradleCompatible'
+    }
 }
 
 dependencies {
