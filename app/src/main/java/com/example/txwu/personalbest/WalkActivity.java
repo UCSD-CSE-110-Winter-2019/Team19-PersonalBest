@@ -21,6 +21,7 @@ import com.example.txwu.personalbest.fitness.Walk;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -75,8 +76,8 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         long minutes = seconds/60;
         seconds = seconds%60;
 
-        time.setText(String.format("%d:%02d", minutes, seconds));
-        step_count.setText(String.format("%d", walk.getSteps()));
+        time.setText(String.format(Locale.US,"%d:%02d", minutes, seconds));
+        step_count.setText(String.format(Locale.US,"%d", walk.getSteps()));
     }
 
     /**
@@ -86,7 +87,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
     public void setDistance(float distance) {
         walk.setDistance(distance);
         TextView dist_count = findViewById(R.id.walk_distance);
-        dist_count.setText(String.format("%.2f", walk.getDistance()/1600));
+        dist_count.setText(String.format(Locale.US,"%.2f", walk.getDistance()/1600));
     }
 
     /**

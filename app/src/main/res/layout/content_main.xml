@@ -21,7 +21,7 @@
             android:id="@+id/textSteps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="STEPS"
+            android:text="@string/main_step_default"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Start Walk"
+            android:text="@string/start_walk_button"
             android:textSize="50sp" />
 
     </LinearLayout>

@@ -51,7 +51,7 @@
             android:id="@+id/walk_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/default_step"
+            android:text="@string/default_time"
             android:layout_centerHorizontal="true"
             android:textSize="50sp"/>
 
