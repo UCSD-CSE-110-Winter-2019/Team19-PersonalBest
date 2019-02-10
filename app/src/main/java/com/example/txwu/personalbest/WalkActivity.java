@@ -1,6 +1,7 @@
 package com.example.txwu.personalbest;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
 
     public String fitnessServiceKey = "FIT_FOR_WALK";
     private static final String TAG = "WalkActivity";
+    public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
 
     public Walk walk;
     private FitnessService fitnessService;
@@ -35,6 +37,11 @@ public class WalkActivity extends AppCompatActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walk);
+
+        // get service key if specified
+        Intent intent = getIntent();
+        if (intent.hasExtra(FITNESS_SERVICE_KEY))
+            fitnessServiceKey = intent.getStringExtra(FITNESS_SERVICE_KEY);
 
         // create new Walk object using current time
         Calendar cal = Calendar.getInstance();

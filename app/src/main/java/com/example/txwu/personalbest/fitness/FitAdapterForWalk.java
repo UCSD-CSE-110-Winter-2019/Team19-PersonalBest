@@ -10,7 +10,6 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
@@ -146,42 +145,6 @@ public class FitAdapterForWalk implements FitnessService {
                     }
                 });
     }
-
-    /**
-     * make subscription to speed
-     */
-    public void subScribeSpeed() {
-        Fitness.getRecordingClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
-                .subscribe(DataType.TYPE_SPEED)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Successfully subscribed speed!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, e.getMessage());
-                    }
-                });
-
-        Fitness.getRecordingClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
-                .subscribe(DataType.AGGREGATE_SPEED_SUMMARY)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Successfully subscribed speed!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, "There was a problem subscribing speed.");
-                    }
-                });
-    }
-
 
     /**
      * update step count using start and end time
@@ -341,10 +304,9 @@ public class FitAdapterForWalk implements FitnessService {
         return GOOGLE_FIT_PERMISSIONS_REQUEST_CODE;
     }
 
-    public static FitAdapterForWalk getInstance(WalkActivity walkActivity) {
-        if (walkActivity.fitnessServiceKey.equals("FIT_FOW_WALK"))
-            return new FitAdapterForWalk(walkActivity);
-
+    public static FitnessService getInstance(WalkActivity walkActivity) {
+        if (walkActivity.fitnessServiceKey.equals("TEST_SERVICE"))
+            return new MockWalkAdapter(walkActivity);
         else
             return new FitAdapterForWalk(walkActivity);
     }
