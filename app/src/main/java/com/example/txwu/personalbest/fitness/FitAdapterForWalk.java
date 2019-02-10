@@ -202,8 +202,6 @@ public class FitAdapterForWalk implements FitnessService {
         long endTime = cal.getTimeInMillis();
         long startTime = walk.StartTime();
         walk.setEndTime(endTime);
-        System.out.println(String.format("StartTime: %d EndTime: %d", startTime, endTime));
-        System.out.println(startTime < endTime);
 
         DataReadRequest readRequest =
                 new DataReadRequest.Builder()
