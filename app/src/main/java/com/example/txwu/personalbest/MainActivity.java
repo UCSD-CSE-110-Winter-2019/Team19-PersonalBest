@@ -58,21 +58,21 @@ public class MainActivity extends AppCompatActivity implements Observer {
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
-        if (stepSensor == null) {
+/*       if (stepSensor == null) {
             FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
                 @Override
                 public FitnessService create(MainActivity activity) {
                     return new SensorAdapter(activity);
                 }
             });
-        } else {
+        } else {*/
             FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
                 @Override
                 public FitnessService create(MainActivity activity) {
                     return new GoogleFitAdapter(activity);
                 }
             });
-        }
+        //}
 
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
 

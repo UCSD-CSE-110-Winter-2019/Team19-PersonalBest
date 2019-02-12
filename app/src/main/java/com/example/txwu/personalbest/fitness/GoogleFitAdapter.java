@@ -51,6 +51,7 @@ public class GoogleFitAdapter implements FitnessService {
         } else {
             StepTracker stepTracker = new StepTracker(this);
             stepTracker.addObserver(activity);
+            updateStepCount(stepTracker);
             startRecording();
         }
     }
