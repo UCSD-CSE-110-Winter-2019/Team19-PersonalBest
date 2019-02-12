@@ -25,7 +25,7 @@ public class WalkActivityTest {
     private Button stop;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         Intent intent = new Intent(RuntimeEnvironment.application, WalkActivity.class);
         intent.putExtra(WalkActivity.FITNESS_SERVICE_KEY, TEST_SERVICE);
         activity = Robolectric.buildActivity(WalkActivity.class, intent).create().get();
@@ -43,7 +43,7 @@ public class WalkActivityTest {
         assertEquals("0.00", textDistance.getText().toString());
 
         // wait for 6 seconds
-        Thread.sleep(6000);
+        Thread.sleep(6200);
         assertEquals("150", textSteps.getText().toString());
         assertEquals(String.format("%.2f", 180.0/1600.0), textDistance.getText().toString());
     }
@@ -52,14 +52,16 @@ public class WalkActivityTest {
     public void testToastCreated() throws Exception {
 
         // wait for 6 seconds
-        Thread.sleep(6000);
+        Thread.sleep(6200);
 
         // click Stop Walk
         stop.performClick();
+        float speed = ((float)(30 * 3600)/1600);
 
         String latestToast = ShadowToast.getTextOfLatestToast();
         assertNotNull(latestToast);
-        assertEquals(String.format("Walk ended with %d steps in 0:%02d.", 150, 6),
+        assertEquals(String.format("Walk ended with %d steps\n in 0:00:%02d." +
+                        "\nAverage speed is %.1f mph.", 150, 6, speed),
                 latestToast);
     }
 }

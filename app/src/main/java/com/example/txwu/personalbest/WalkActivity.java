@@ -62,6 +62,8 @@ public class WalkActivity extends AppCompatActivity implements Observer {
             }
         });
         fitnessService.setup();
+
+        Log.d(TAG, "Walk started.");
     }
 
     /**
@@ -74,9 +76,11 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         TextView time = findViewById(R.id.walk_time);
         long seconds = (walk.EndTime() - walk.StartTime())/1000;
         long minutes = seconds/60;
+        long hours = minutes/60;
         seconds = seconds%60;
+        minutes = minutes%60;
 
-        time.setText(String.format(Locale.US,"%d:%02d", minutes, seconds));
+        time.setText(String.format(Locale.US,"%d:%02d:%02d", hours, minutes, seconds));
         step_count.setText(String.format(Locale.US,"%d", walk.getSteps()));
     }
 
@@ -120,10 +124,22 @@ public class WalkActivity extends AppCompatActivity implements Observer {
      * End walk activity
      */
     public void endWalk() {
+        float speed = walk.getSpeed();
+
+        //convert m/s to MPH
+        speed = (speed*3600)/1600;
+
         fitnessService.cancel();
         TextView step_count = findViewById(R.id.walk_step_counter);
         TextView time = findViewById(R.id.walk_time);
-        Toast.makeText(this, "Walk ended with " + step_count.getText() + " steps in " + time.getText() + ".", Toast.LENGTH_LONG).show();
+        Toast.makeText(this,
+                String.format(Locale.US,
+                "Walk ended with %s steps\n in %s." +
+                        "\nAverage speed is %.1f mph.", step_count.getText().toString(),
+                        time.getText().toString(), speed),
+                Toast.LENGTH_LONG).show();
+
+        Log.d(TAG, "Walk finished.");
         finish();
     }
 }
