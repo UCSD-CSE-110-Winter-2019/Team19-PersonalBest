@@ -109,7 +109,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
     }
 
     /**
-     * Requests permission ot access user location
+     * Requests permission to access user location
      */
     public void request_location_permission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -123,7 +123,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
     /**
      * End walk activity
      */
-    public void endWalk() {
+    private void endWalk() {
         float speed = walk.getSpeed();
 
         //convert m/s to MPH
@@ -140,6 +140,15 @@ public class WalkActivity extends AppCompatActivity implements Observer {
                 Toast.LENGTH_LONG).show();
 
         Log.d(TAG, "Walk finished.");
+
+        saveWalk();
         finish();
+    }
+
+    /**
+     * Saves the walk object in the history
+     */
+    private void saveWalk() {
+        // TODO
     }
 }
