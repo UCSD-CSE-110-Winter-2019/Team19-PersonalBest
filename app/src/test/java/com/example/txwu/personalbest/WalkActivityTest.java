@@ -60,7 +60,7 @@ public class WalkActivityTest {
 
         String latestToast = ShadowToast.getTextOfLatestToast();
         assertNotNull(latestToast);
-        assertEquals(String.format("Walk ended with %d steps\n in 0:00:%02d." +
+        assertEquals(String.format("Walk ended with %d steps in 0:00:%02d." +
                         "\nAverage speed is %.1f mph.", 150, 6, speed),
                 latestToast);
     }

@@ -134,21 +134,14 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         TextView time = findViewById(R.id.walk_time);
         Toast.makeText(this,
                 String.format(Locale.US,
-                "Walk ended with %s steps\n in %s." +
+                "Walk ended with %s steps in %s." +
                         "\nAverage speed is %.1f mph.", step_count.getText().toString(),
                         time.getText().toString(), speed),
                 Toast.LENGTH_LONG).show();
 
         Log.d(TAG, "Walk finished.");
 
-        saveWalk();
         finish();
     }
 
-    /**
-     * Saves the walk object in the history
-     */
-    private void saveWalk() {
-        // TODO
-    }
 }

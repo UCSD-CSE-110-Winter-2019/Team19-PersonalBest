@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/popup_element"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:padding="25dp">
+
+    <Button
+        android:id="@+id/popup_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/close_pw" />
+
+    <TextView
+        android:id="@+id/popup_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
+
+</android.widget.LinearLayout>
