@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Observer{
     private Goal goal;
     private int goalSteps = 10;
     private int stepsPrev;
+    private int stepsSubGoal = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +106,9 @@ public class MainActivity extends AppCompatActivity implements Observer{
                 goal.setSteps(steps);
                 goal.showMeetGoal(goalSteps);
                 textSteps.setText(String.valueOf(steps));
-                if (steps >= stepsPrev * 10){
+                if (steps >= stepsPrev * stepsSubGoal){
                     goal.show500StepsSubGoal();
-                    stepsPrev = (int)(steps / 10) + 1;
+                    stepsPrev = (int)(steps / stepsSubGoal) + 1;
                     String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                     SharedPreferences sharedPreferences = getSharedPreferences("PersonalBest", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
