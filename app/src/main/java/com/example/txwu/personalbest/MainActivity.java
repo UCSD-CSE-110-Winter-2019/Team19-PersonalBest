@@ -22,6 +22,7 @@ import com.example.txwu.personalbest.fitness.FitnessServiceFactory;
 import com.example.txwu.personalbest.fitness.StepTracker;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements Observer{
     private FitnessService fitnessService;
     private Goal goal;
     private int goalSteps = 10;
+    private int stepsPrev;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,15 @@ public class MainActivity extends AppCompatActivity implements Observer{
         });
 
         textSteps = findViewById(R.id.textSteps);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 8);
+        goal = new Goal(this, cal.getTime());
 
-        goal = new Goal(this, new Date());
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        SharedPreferences sharedPreferences = getSharedPreferences("PersonalBest", MODE_PRIVATE);
+        stepsPrev = sharedPreferences.getInt(date+"stepsPrev", 0);
+        System.out.println("retrieving stepsPrev:" + " " + stepsPrev);
+
 
         Intent intent = new Intent(this, StepService2.class);
         startService(intent);
@@ -93,10 +102,19 @@ public class MainActivity extends AppCompatActivity implements Observer{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                System.out.println(steps);
                 goal.setSteps(steps);
                 goal.showMeetGoal(goalSteps);
                 textSteps.setText(String.valueOf(steps));
+                if (steps >= stepsPrev * 10){
+                    goal.show500StepsSubGoal();
+                    stepsPrev = (int)(steps / 10) + 1;
+                    String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                    SharedPreferences sharedPreferences = getSharedPreferences("PersonalBest", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(date+"stepsPrev", stepsPrev);
+                    editor.apply();
+                    //System.out.println(stepsPrev + " " + steps);
+                }
             }
         });
     }

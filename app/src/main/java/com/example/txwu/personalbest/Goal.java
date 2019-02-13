@@ -25,8 +25,9 @@ public class Goal {
             @Override
             public void run() {
                 Date currentTime = Calendar.getInstance().getTime();
-                if (endSubGoalDate.after(currentTime)) {
+                if (!checkIfDailyGoalShown("subgoal1") && endSubGoalDate.after(currentTime)) {
                     showMeetSubGoal();
+                    setDailyGoalShown("subgoal1");
                 }
             }
         };
@@ -72,5 +73,9 @@ public class Goal {
                 Toast.makeText(activity, "TODO put subgoal here!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void show500StepsSubGoal(){
+        Toast.makeText(activity, "You have reached another 500 steps!", Toast.LENGTH_SHORT).show();
     }
 }

@@ -33,7 +33,6 @@ public class StepDetector {
     public boolean update(SensorEvent event) {
         boolean update = false;
         Sensor sensor = event.sensor;
-        System.out.println(sensor.getType());
         synchronized (this) {
             int j = (sensor.getType() == Sensor.TYPE_ACCELEROMETER) ? 1 : 0;
             if (j == 1) {
