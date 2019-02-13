@@ -1,13 +1,17 @@
 package com.example.txwu.personalbest;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Goal {
     private Activity activity;
@@ -31,9 +35,30 @@ public class Goal {
     }
 
     public void showMeetGoal(long goal) {
-        if (this.steps >= goal) {
+        if (!checkIfDailyGoalShown("goal") && this.steps >= goal) {
             Toast.makeText(activity, "Congratulations for meeting your goal of " + String.valueOf(goal) + " steps!", Toast.LENGTH_SHORT).show();
+            setDailyGoalShown("goal");
         }
+    }
+
+    public boolean checkIfDailyGoalShown(String type) {
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+        System.out.println(sharedPreferences.getBoolean(date+type, false));
+        return sharedPreferences.getBoolean(date+type, false);
+    }
+
+    public void setDailyGoalShown(String type) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        editor.putBoolean(date+type, true);
+
+        String previousDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date(System.currentTimeMillis()-24*60*60*1000));
+        editor.remove(previousDate+type);
+
+        editor.apply();
     }
 
     public void setSteps(long steps) {

@@ -1,6 +1,8 @@
 package com.example.txwu.personalbest;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -19,11 +21,12 @@ import com.example.txwu.personalbest.fitness.FitnessService;
 import com.example.txwu.personalbest.fitness.FitnessServiceFactory;
 import com.example.txwu.personalbest.fitness.StepTracker;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainActivity extends AppCompatActivity implements Observer {
+public class MainActivity extends AppCompatActivity implements Observer{
     private String fitnessServiceKey = "GOOGLE_FIT";
 
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private TextView textTest;
     private FitnessService fitnessService;
     private Goal goal;
+    private int goalSteps = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         goal = new Goal(this, new Date());
 
-        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Intent intent = new Intent(this, StepService2.class);
+        startService(intent);
+
+        StepsUpdateTask stepsUpdateTask = new StepsUpdateTask(this);
+        stepsUpdateTask.addObserver(this);
 
 /*       if (stepSensor == null) {
             FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
@@ -66,37 +73,32 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 }
             });
         } else {*/
-            FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
+            /*FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
                 @Override
                 public FitnessService create(MainActivity activity) {
                     return new GoogleFitAdapter(activity);
                 }
-            });
+            });*/
         //}
 
-        fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
-
-        fitnessService.setup();
+        //fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
+        //fitnessService.setup();
     }
 
     private boolean isFirstTimeOpenApp = true;
 
     @Override
     public void update(Observable o, Object arg) {
-        final long steps = (long) arg;
+        final int steps = (int) arg;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                System.out.println(steps);
                 goal.setSteps(steps);
-                if (isFirstTimeOpenApp) {
-                    goal.showMeetGoal(10);
-                    isFirstTimeOpenApp = false;
-                }
+                goal.showMeetGoal(goalSteps);
                 textSteps.setText(String.valueOf(steps));
             }
         });
-        // TODO put notifications here
-        //warningService.update(o, arg);
     }
 
     @Override
@@ -120,4 +122,5 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
