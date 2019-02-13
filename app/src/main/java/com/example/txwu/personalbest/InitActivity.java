@@ -1,6 +1,7 @@
 package com.example.txwu.personalbest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -144,8 +145,8 @@ public class InitActivity extends AppCompatActivity {
     }
 
     private void endActivity() {
-        // go to main activity or main screen
-        finish();
+        Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
+        startActivity(i);
     }
 
     private void nextState() {

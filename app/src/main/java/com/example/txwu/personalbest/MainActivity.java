@@ -26,10 +26,11 @@ public class MainActivity extends AppCompatActivity {
         Intent i;
         if (!prefs.getBoolean("accepted_terms_and_privacy", false) || prefs.getLong("user_height", 0) == 0) {
             i = new Intent(getApplicationContext(), InitActivity.class);
-            startActivity(i);
+        } else {
+            i = new Intent(getApplicationContext(), MainScreenActivity.class);
         }
         // else start main screen
-        // startActivity(i);
+        startActivity(i);
     }
 
     @Override
