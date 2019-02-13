@@ -45,7 +45,6 @@ public class Goal {
     public boolean checkIfDailyGoalShown(String type) {
         String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
         SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
-        System.out.println(sharedPreferences.getBoolean(date+type, false));
         return sharedPreferences.getBoolean(date+type, false);
     }
 

@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements Observer{
                 goal.showMeetGoal(goalSteps);
                 textSteps.setText(String.valueOf(steps));
                 if (steps >= stepsPrev * stepsSubGoal){
-                    goal.show500StepsSubGoal();
-                    stepsPrev = (int)(steps / stepsSubGoal) + 1;
+                    //goal.show500StepsSubGoal();
+                    //stepsPrev = (int)(steps / stepsSubGoal) + 1;
                     String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                     SharedPreferences sharedPreferences = getSharedPreferences("PersonalBest", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();

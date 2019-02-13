@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.hardware.TriggerEvent;
 import android.hardware.TriggerEventListener;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.txwu.personalbest.fitness.FitnessService;
@@ -44,16 +45,20 @@ public class SensorCollector implements SensorEventListener {
     }
 
     public void onSensorChanged(SensorEvent event) {
-        if (stepDetector.update(event)) {
-            steps++;
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            boolean update = stepDetector.update(event.values);
+            Log.i("STEPS", "x:" + event.values[0] + " y:" + event.values[1] + " z:" + event.values[1] + " update:" + update + "\n");
+            if (update) {
+                steps++;
 
-            SharedPreferences sharedPreferences = context.getSharedPreferences("PersonalBest", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+                SharedPreferences sharedPreferences = context.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-            editor.putInt(date, steps);
+                String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                editor.putInt(date, steps);
 
-            editor.apply();
+                editor.apply();
+            }
         }
     }
 
