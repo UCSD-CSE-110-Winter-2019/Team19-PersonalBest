@@ -54,35 +54,39 @@ public class FitAdapterForWalk implements FitnessService {
         if (lastSignedInAccount == null) {
             return;
         }
+        try {
+            Fitness.getSensorsClient(activity, lastSignedInAccount)
+                    .findDataSources(
+                            new DataSourcesRequest.Builder()
+                                    .setDataTypes(DataType.TYPE_LOCATION_SAMPLE)
+                                    .setDataSourceTypes(DataSource.TYPE_RAW)
+                                    .build())
+                    .addOnSuccessListener(
+                            new OnSuccessListener<List<DataSource>>() {
+                                @Override
+                                public void onSuccess(List<DataSource> dataSources) {
+                                    Log.i(TAG, "Num Data source: " + dataSources.size());
+                                    for (DataSource dataSource : dataSources) {
+                                        Log.i(TAG, "Data source type: " + dataSource.getDataType().getName() + "\n");
 
-        Fitness.getSensorsClient(activity, lastSignedInAccount)
-                .findDataSources(
-                        new DataSourcesRequest.Builder()
-                                .setDataTypes(DataType.TYPE_LOCATION_SAMPLE)
-                                .setDataSourceTypes(DataSource.TYPE_RAW)
-                                .build())
-                .addOnSuccessListener(
-                        new OnSuccessListener<List<DataSource>>() {
-                            @Override
-                            public void onSuccess(List<DataSource> dataSources) {
-                                Log.i(TAG, "Num Data source: " + dataSources.size());
-                                for (DataSource dataSource : dataSources) {
-                                    Log.i(TAG, "Data source type: " + dataSource.getDataType().getName() + "\n");
+                                        // Let's register a listener to receive Activity data!
+                                        Log.i(TAG, "Data source for LOCATION_SAMPLE found!  Registering.");
+                                        //registerFitnessDataListener(dataSource, DataType.TYPE_LOCATION_SAMPLE);
+                                    }
 
-                                    // Let's register a listener to receive Activity data!
-                                    Log.i(TAG, "Data source for LOCATION_SAMPLE found!  Registering.");
-                                    //registerFitnessDataListener(dataSource, DataType.TYPE_LOCATION_SAMPLE);
                                 }
+                            })
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "failed", e);
+                                }
+                            });
+        }
+        catch (Exception e) {
 
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "failed", e);
-                            }
-                        });
+        }
 
         subScribeSteps();
         subScribeDistance();
@@ -92,40 +96,50 @@ public class FitAdapterForWalk implements FitnessService {
      * make subscription to steps
      */
     public void subScribeSteps() {
-        Fitness.getRecordingClient(activity, lastSignedInAccount)
-                .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Successfully subscribed steps!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, "There was a problem subscribing steps.");
-                    }
-                });
+        try {
+            Fitness.getRecordingClient(activity, lastSignedInAccount)
+                    .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i(TAG, "Successfully subscribed steps!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i(TAG, "There was a problem subscribing steps.");
+                        }
+                    });
+        }
+        catch (Exception e) {
+
+        }
     }
 
     /**
      * make subscription to distance
      */
     public void subScribeDistance() {
-        Fitness.getRecordingClient(activity, lastSignedInAccount)
-                .subscribe(DataType.TYPE_DISTANCE_DELTA)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Successfully subscribed distance!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, e.getMessage());
-                    }
-                });
+        try {
+            Fitness.getRecordingClient(activity, lastSignedInAccount)
+                    .subscribe(DataType.TYPE_DISTANCE_DELTA)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i(TAG, "Successfully subscribed distance!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i(TAG, e.getMessage());
+                        }
+                    });
+        }
+        catch (Exception e) {
+
+        }
     }
 
     /**
@@ -148,39 +162,44 @@ public class FitAdapterForWalk implements FitnessService {
         walk.setEndTime(endTime);
 
         Log.d("RUAAA", "Start: " + startTime + "      End: " + endTime);
-        DataReadRequest readRequest =
-                new DataReadRequest.Builder()
-                        .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                        .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                        .bucketByTime(1, TimeUnit.DAYS)
-                        .build();
+        try {
+            DataReadRequest readRequest =
+                    new DataReadRequest.Builder()
+                            .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                            .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                            .bucketByTime(1, TimeUnit.DAYS)
+                            .build();
 
-        Fitness.getHistoryClient(activity, lastSignedInAccount)
-                .readData(readRequest)
-                .addOnSuccessListener(
-                        new OnSuccessListener<DataReadResponse>() {
-                            @Override
-                            public void onSuccess(DataReadResponse dataReadResponse) {
-                                List<Bucket> dataSets = dataReadResponse.getBuckets();
-                                List<DataPoint> dataPoints= dataSets.get(0)
-                                        .getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA)
-                                        .getDataPoints();
+            Fitness.getHistoryClient(activity, lastSignedInAccount)
+                    .readData(readRequest)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<DataReadResponse>() {
+                                @Override
+                                public void onSuccess(DataReadResponse dataReadResponse) {
+                                    List<Bucket> dataSets = dataReadResponse.getBuckets();
+                                    List<DataPoint> dataPoints = dataSets.get(0)
+                                            .getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA)
+                                            .getDataPoints();
 
-                                int total = dataPoints.isEmpty()
-                                        ?0
-                                        :dataPoints.get(0).getValue(Field.FIELD_STEPS).asInt();
+                                    int total = dataPoints.isEmpty()
+                                            ? 0
+                                            : dataPoints.get(0).getValue(Field.FIELD_STEPS).asInt();
 
-                                stepTracker.update(total);
+                                    stepTracker.update(total);
+                                }
                             }
-                        }
-                )
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "There was a problem getting the step count.", e);
-                            }
-                        });
+                    )
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "There was a problem getting the step count.", e);
+                                }
+                            });
+        }
+        catch (Exception e) {
+
+        }
         updateDistance();
         updateSpeed();
     }
@@ -196,41 +215,45 @@ public class FitAdapterForWalk implements FitnessService {
 
         long endTime = walk.EndTime();
         long startTime = walk.StartTime();
+        try {
+            DataReadRequest readRequest =
+                    new DataReadRequest.Builder()
+                            .aggregate(DataType.TYPE_DISTANCE_DELTA, DataType.AGGREGATE_DISTANCE_DELTA)
+                            .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                            .bucketByTime(1, TimeUnit.DAYS)
+                            .build();
 
-        DataReadRequest readRequest =
-                new DataReadRequest.Builder()
-                        .aggregate(DataType.TYPE_DISTANCE_DELTA, DataType.AGGREGATE_DISTANCE_DELTA)
-                        .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                        .bucketByTime(1, TimeUnit.DAYS)
-                        .build();
+            Fitness.getHistoryClient(activity, lastSignedInAccount)
+                    .readData(readRequest)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<DataReadResponse>() {
+                                @Override
+                                public void onSuccess(DataReadResponse dataReadResponse) {
+                                    List<Bucket> dataSets = dataReadResponse.getBuckets();
+                                    List<DataPoint> dataPoints = dataSets.get(0)
+                                            .getDataSet(DataType.AGGREGATE_DISTANCE_DELTA)
+                                            .getDataPoints();
 
-        Fitness.getHistoryClient(activity, lastSignedInAccount)
-                .readData(readRequest)
-                .addOnSuccessListener(
-                        new OnSuccessListener<DataReadResponse>() {
-                            @Override
-                            public void onSuccess(DataReadResponse dataReadResponse) {
-                                List<Bucket> dataSets = dataReadResponse.getBuckets();
-                                List<DataPoint> dataPoints= dataSets.get(0)
-                                        .getDataSet(DataType.AGGREGATE_DISTANCE_DELTA)
-                                        .getDataPoints();
+                                    Log.d(TAG, "" + dataPoints.isEmpty());
+                                    float total = dataPoints.isEmpty()
+                                            ? 0
+                                            : dataPoints.get(0).getValue(Field.FIELD_DISTANCE).asFloat();
 
-                                Log.d(TAG, "" + dataPoints.isEmpty());
-                                float total = dataPoints.isEmpty()
-                                        ?0
-                                        :dataPoints.get(0).getValue(Field.FIELD_DISTANCE).asFloat();
-
-                                activity.setDistance(total);
+                                    activity.setDistance(total);
+                                }
                             }
-                        }
-                )
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "There was a problem getting the distance.", e);
-                            }
-                        });
+                    )
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "There was a problem getting the distance.", e);
+                                }
+                            });
+        }
+        catch (Exception e) {
+
+        }
     }
 
     /**
@@ -246,39 +269,44 @@ public class FitAdapterForWalk implements FitnessService {
         long startTime = walk.StartTime();
         long endTime = walk.EndTime();
 
-        DataReadRequest readRequest =
-                new DataReadRequest.Builder()
-                        .aggregate(DataType.TYPE_SPEED, DataType.AGGREGATE_SPEED_SUMMARY)
-                        .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                        .bucketByTime(1, TimeUnit.DAYS)
-                        .build();
+        try {
+            DataReadRequest readRequest =
+                    new DataReadRequest.Builder()
+                            .aggregate(DataType.TYPE_SPEED, DataType.AGGREGATE_SPEED_SUMMARY)
+                            .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                            .bucketByTime(1, TimeUnit.DAYS)
+                            .build();
 
-        Fitness.getHistoryClient(activity, lastSignedInAccount)
-                .readData(readRequest)
-                .addOnSuccessListener(
-                        new OnSuccessListener<DataReadResponse>() {
-                            @Override
-                            public void onSuccess(DataReadResponse dataReadResponse) {
-                                List<Bucket> dataSets = dataReadResponse.getBuckets();
-                                List<DataPoint> dataPoints= dataSets.get(0)
-                                        .getDataSet(DataType.AGGREGATE_SPEED_SUMMARY)
-                                        .getDataPoints();
+            Fitness.getHistoryClient(activity, lastSignedInAccount)
+                    .readData(readRequest)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<DataReadResponse>() {
+                                @Override
+                                public void onSuccess(DataReadResponse dataReadResponse) {
+                                    List<Bucket> dataSets = dataReadResponse.getBuckets();
+                                    List<DataPoint> dataPoints = dataSets.get(0)
+                                            .getDataSet(DataType.AGGREGATE_SPEED_SUMMARY)
+                                            .getDataPoints();
 
-                                float total = dataPoints.isEmpty()
-                                        ?0
-                                        :dataPoints.get(0).getValue(Field.FIELD_AVERAGE).asFloat();
+                                    float total = dataPoints.isEmpty()
+                                            ? 0
+                                            : dataPoints.get(0).getValue(Field.FIELD_AVERAGE).asFloat();
 
-                                activity.setSpeed(total);
+                                    activity.setSpeed(total);
+                                }
                             }
-                        }
-                )
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "There was a problem getting the speed.", e);
-                            }
-                        });
+                    )
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "There was a problem getting the speed.", e);
+                                }
+                            });
+        }
+        catch (Exception e) {
+
+        }
     }
 
     @Override

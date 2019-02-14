@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private static final String TAG = "StepCountActivity";
 
     private TextView textSteps;
-    private FitnessService fitnessService;
+    //private FitnessService fitnessService;
     private Goal goal;
     private int goalSteps = 10;
     private int stepsPrev;
