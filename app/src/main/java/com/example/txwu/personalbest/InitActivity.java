@@ -145,8 +145,6 @@ public class InitActivity extends AppCompatActivity {
     }
 
     private void endActivity() {
-        //Intent i = new Intent(getApplicationContext(), MainScreenActivity.class);
-        //startActivity(i);
         finish();
     }
 

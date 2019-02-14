@@ -34,9 +34,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private static final String TAG = "StepCountActivity";
 
     private TextView textSteps;
-    private TextView textTest;
     private FitnessService fitnessService;
-    //private Goal goal;
 
     private SharedPreferences prefs = null;
 
@@ -55,18 +53,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
         textSteps = findViewById(R.id.textSteps);
-
-        //goal = new Goal(this, new Date());
 
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -108,16 +95,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //goal.setSteps(steps);
                 if (isFirstTimeOpenApp) {
-                    //goal.showMeetGoal(10);
                     isFirstTimeOpenApp = false;
                 }
                 textSteps.setText(String.valueOf(steps));
             }
         });
-        // TODO put notifications here
-        //warningService.update(o, arg);
+
     }
 
     @Override

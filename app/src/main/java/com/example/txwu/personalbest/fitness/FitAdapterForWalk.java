@@ -59,11 +59,10 @@ public class FitAdapterForWalk implements FitnessService {
                     GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
                     GoogleSignIn.getLastSignedInAccount(activity),
                     fitnessOptions);
-        } else {
-            stepTracker = new StepTracker(this);
-            stepTracker.addObserver(activity);
-            startRecording();
         }
+        stepTracker = new StepTracker(this);
+        stepTracker.addObserver(activity);
+        startRecording();
     }
 
     private void startRecording() {
@@ -103,7 +102,6 @@ public class FitAdapterForWalk implements FitnessService {
 
         subScribeSteps();
         subScribeDistance();
-        //subScribeSpeed();
     }
 
     /**

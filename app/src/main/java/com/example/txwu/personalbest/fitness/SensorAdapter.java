@@ -72,12 +72,6 @@ public class SensorAdapter extends Service implements FitnessService, SensorEven
 
         motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
 
-/*        if (motionSensor == null) {
-            Toast.makeText(activity, "No Motion Sensor!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(activity, "We have Motion Sensor!", Toast.LENGTH_SHORT).show();
-        }*/
-
         SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
         steps = sharedPreferences.getInt("steps", 0);
 
