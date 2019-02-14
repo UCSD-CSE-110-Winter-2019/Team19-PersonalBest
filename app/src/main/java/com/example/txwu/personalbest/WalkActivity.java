@@ -15,8 +15,6 @@ import android.widget.Toast;
 
 import com.example.txwu.personalbest.fitness.FitAdapterForWalk;
 import com.example.txwu.personalbest.fitness.FitnessService;
-import com.example.txwu.personalbest.fitness.FitnessServiceFactory;
-import com.example.txwu.personalbest.fitness.GoogleFitAdapter;
 import com.example.txwu.personalbest.fitness.Walk;
 
 import java.util.Calendar;

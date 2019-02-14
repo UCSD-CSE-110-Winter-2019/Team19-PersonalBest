@@ -79,30 +79,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         StepsUpdateTask stepsUpdateTask = new StepsUpdateTask(this);
         stepsUpdateTask.addObserver(this);
 
-        /*SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-
-        if (stepSensor == null) {
-            FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
-                @Override
-                public FitnessService create(MainActivity activity) {
-                    return new GoogleFitAdapter(activity);
-                }
-            });
-        } else {
-            FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
-                @Override
-                public FitnessService create(MainActivity activity) {
-                    return new GoogleFitAdapter(activity);
-                }
-            });
-        }
-
-        fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
-
-        fitnessService.setup();*/
-
-
     }
 
     private boolean isFirstTimeOpenApp = true;
