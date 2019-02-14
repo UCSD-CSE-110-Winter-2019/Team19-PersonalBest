@@ -72,13 +72,26 @@ public class WalkActivityTest {
 
     @Test
     public void testSaveWalk() {
-        activity.walk.setSteps(3000);
-        Date date = new Date();
-        activity.saveWalk(date);
 
+        // reset to 0
         SharedPreferences sharedPreferences = activity.outputSharedPreferences();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Date date = new Date();
         String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(date);
+        editor.putInt(dateString, 0);
+        editor.apply();
+
+        // test 3000 steps
+        activity.walk.setSteps(3000);
+        activity.saveWalk(date);
         int steps = sharedPreferences.getInt(dateString, 0);
         assertEquals(3000, steps);
+
+        // test multiple walks
+        activity.saveWalk(date);
+        activity.saveWalk(date);
+
+        steps = sharedPreferences.getInt(dateString, 0);
+        assertEquals(9000, steps);
     }
 }
