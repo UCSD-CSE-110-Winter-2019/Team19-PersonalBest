@@ -10,4 +10,8 @@
     <string name="main_step_default">STEPS</string>
     <string name="start_walk_button">Start Walk</string>
     <string name="stats">Statistics</string>
+    <string name="dialog_choose_goal">Please Choose A New Goal</string>
+    <string name="dialog_not_now">Not Now</string>
+    <string name="dialog_custom">Use Custom</string>
+    <string name="dialog_hint">Enter Custom</string>
 </resources>
