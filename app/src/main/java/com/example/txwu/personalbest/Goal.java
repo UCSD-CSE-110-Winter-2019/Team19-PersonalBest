@@ -77,4 +77,13 @@ public class Goal {
     public void show500StepsSubGoal(){
         Toast.makeText(activity, "You have reached another 500 steps!", Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * return a newly suggested goal using the current goal
+     * @param currentGoal - the current Goal
+     * @return
+     */
+    public static int suggestNextGoal(int currentGoal) {
+        return currentGoal + 500;
+    }
 }

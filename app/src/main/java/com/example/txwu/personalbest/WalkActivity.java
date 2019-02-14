@@ -2,6 +2,7 @@ package com.example.txwu.personalbest;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import com.example.txwu.personalbest.fitness.FitAdapterForWalk;
 import com.example.txwu.personalbest.fitness.FitnessService;
 import com.example.txwu.personalbest.fitness.Walk;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -139,7 +141,32 @@ public class WalkActivity extends AppCompatActivity implements Observer {
 
         Log.d(TAG, "Walk finished.");
 
+        saveWalk(new Date());
         finish();
     }
 
+    /**
+     * Get the SharedPreferences used for intentional walks
+     * @return - intentional walk sharedPreferences
+     */
+    public SharedPreferences outputSharedPreferences() {
+        return getSharedPreferences("Intentional", MODE_PRIVATE);
+    }
+
+    /**
+     * Save the number of steps of the walk in the history
+     * @param date - the current date
+     */
+    public void saveWalk(Date date) {
+
+        SharedPreferences sharedPreferences = outputSharedPreferences();
+        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(date);
+        int steps = walk.getSteps();
+        int prevSteps = sharedPreferences.getInt(dateString, 0);
+
+        steps += prevSteps;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(dateString, steps);
+        editor.apply();
+    }
 }

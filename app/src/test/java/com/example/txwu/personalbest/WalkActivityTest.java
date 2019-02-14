@@ -1,6 +1,7 @@
 package com.example.txwu.personalbest;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,6 +12,10 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.shadows.ShadowToast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -63,5 +68,17 @@ public class WalkActivityTest {
         assertEquals(String.format("Walk ended with %d steps in 0:00:%02d." +
                         "\nAverage speed is %.1f mph.", 150, 6, speed),
                 latestToast);
+    }
+
+    @Test
+    public void testSaveWalk() {
+        activity.walk.setSteps(3000);
+        Date date = new Date();
+        activity.saveWalk(date);
+
+        SharedPreferences sharedPreferences = activity.outputSharedPreferences();
+        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(date);
+        int steps = sharedPreferences.getInt(dateString, 0);
+        assertEquals(3000, steps);
     }
 }
