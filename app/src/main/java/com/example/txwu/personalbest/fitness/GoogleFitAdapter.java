@@ -38,19 +38,7 @@ public class GoogleFitAdapter implements FitnessService {
     }
 
     public void setup() {
-        FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .build();
 
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(activity), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    activity, // your activity
-                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(activity),
-                    fitnessOptions);
-        }
         stepTracker = new StepTracker(this);
         stepTracker.addObserver(activity);
         startRecording();
@@ -107,41 +95,6 @@ public class GoogleFitAdapter implements FitnessService {
                     }
                 });
     }
-
-    // TODO(phil): remove this
-    private void registerFitnessDataListener(DataSource dataSource, DataType typeLocationSample) {
-        OnDataPointListener mListener = new OnDataPointListener() {
-            @Override
-            public void onDataPoint(DataPoint dataPoint) {
-                for (Field field : dataPoint.getDataType().getFields()) {
-                    Value val = dataPoint.getValue(field);
-                    Log.i(TAG, "Detected DataPoint field: " + field.getName());
-                    Log.i(TAG, "Detected DataPoint value: " + val);
-                }
-            }
-        };
-
-        Fitness.getSensorsClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
-                .add(
-                        new SensorRequest.Builder()
-                                .setDataSource(dataSource) // Optional but recommended for custom data sets.
-                                .setDataType(typeLocationSample) // Can't be omitted.
-                                .setSamplingRate(10, TimeUnit.SECONDS)
-                                .build(),
-                        mListener)
-                .addOnCompleteListener(
-                        new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.i(TAG, "Listener registered!");
-                                } else {
-                                    Log.e(TAG, "Listener not registered.", task.getException());
-                                }
-                            }
-                        });
-    }
-
 
     /**
      * Reads the current daily step total, computed from midnight of the current day on the device's

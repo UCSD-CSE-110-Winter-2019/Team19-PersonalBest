@@ -28,9 +28,10 @@ public class FitAdapterForWalk implements FitnessService {
 
     private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = System.identityHashCode(this) & 0xFFFF;
     private final String TAG = "FitAdapterForWalk";
-    StepTracker stepTracker;
-    WalkActivity activity;
-    Walk walk;
+    private GoogleSignInAccount lastSignedInAccount;
+    private StepTracker stepTracker;
+    private WalkActivity activity;
+    private Walk walk;
 
     /**
      * Constructor
@@ -42,36 +43,19 @@ public class FitAdapterForWalk implements FitnessService {
     }
 
     public void setup() {
-        FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_DISTANCE_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_SPEED, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_SPEED_SUMMARY, FitnessOptions.ACCESS_READ)
-                .build();
 
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(activity), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    activity, // your activity
-                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(activity),
-                    fitnessOptions);
-        }
+        lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
         stepTracker = new StepTracker(this);
         stepTracker.addObserver(activity);
         startRecording();
     }
 
     private void startRecording() {
-        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
         if (lastSignedInAccount == null) {
             return;
         }
 
-        Fitness.getSensorsClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
+        Fitness.getSensorsClient(activity, lastSignedInAccount)
                 .findDataSources(
                         new DataSourcesRequest.Builder()
                                 .setDataTypes(DataType.TYPE_LOCATION_SAMPLE)
@@ -108,7 +92,7 @@ public class FitAdapterForWalk implements FitnessService {
      * make subscription to steps
      */
     public void subScribeSteps() {
-        Fitness.getRecordingClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
+        Fitness.getRecordingClient(activity, lastSignedInAccount)
                 .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -128,7 +112,7 @@ public class FitAdapterForWalk implements FitnessService {
      * make subscription to distance
      */
     public void subScribeDistance() {
-        Fitness.getRecordingClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
+        Fitness.getRecordingClient(activity, lastSignedInAccount)
                 .subscribe(DataType.TYPE_DISTANCE_DELTA)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -149,7 +133,6 @@ public class FitAdapterForWalk implements FitnessService {
      * @param stepTracker - the stepTracker used to notify activity
      */
     public void updateStepCount(final StepTracker stepTracker) {
-        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
         if (lastSignedInAccount == null) {
             return;
         }
@@ -164,6 +147,7 @@ public class FitAdapterForWalk implements FitnessService {
         long startTime = walk.StartTime();
         walk.setEndTime(endTime);
 
+        Log.d("RUAAA", "Start: " + startTime + "      End: " + endTime);
         DataReadRequest readRequest =
                 new DataReadRequest.Builder()
                         .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
@@ -205,7 +189,7 @@ public class FitAdapterForWalk implements FitnessService {
      * update distance on activity using start and end time of walk
      */
     public void updateDistance() {
-        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
+
         if (lastSignedInAccount == null) {
             return;
         }
@@ -253,7 +237,7 @@ public class FitAdapterForWalk implements FitnessService {
      * update speed on activity using start and end time of walk
      */
     public void updateSpeed() {
-        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
+
         if (lastSignedInAccount == null) {
             return;
         }
