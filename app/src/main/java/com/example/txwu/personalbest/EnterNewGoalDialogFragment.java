@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // dialog cancelled
+                        Log.d("Changing Goal ", "User Cancelled change");
                         EnterNewGoalDialogFragment.this.getDialog().cancel();
                     }
                 })
@@ -40,6 +42,7 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         // use suggested goal here
+                        Log.d("Changing Goal", "User used suggested goal: " + newGoal);
                         EnterNewGoalDialogFragment.this.getDialog().cancel();
                     }
                 })
@@ -58,6 +61,7 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
                             goal = newGoal;
                         }
 
+                        Log.d("Changing Goal", "New custom goal: " + goal);
                         EnterNewGoalDialogFragment.this.getDialog().cancel();
                     }
                 });

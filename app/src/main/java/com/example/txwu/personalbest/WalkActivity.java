@@ -100,6 +100,12 @@ public class WalkActivity extends AppCompatActivity implements Observer {
      */
     public void setSpeed(float speed) {
         walk.setSpeed(speed);
+
+        //convert m/s to MPH
+        speed = (speed*3600)/1600;
+        String speedFormat = String.format(Locale.US, "%.1f", speed);
+        TextView speedView = findViewById(R.id.walk_speed);
+        speedView.setText(speedFormat);
     }
 
     @Override
