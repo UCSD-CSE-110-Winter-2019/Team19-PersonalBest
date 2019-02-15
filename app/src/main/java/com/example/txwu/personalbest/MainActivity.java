@@ -51,11 +51,10 @@ public class MainActivity extends AppCompatActivity{
             // https://stackoverflow.com/questions/18957125/how-to-finish-activity-when-starting-other-activity-in-android/18957237
             // cant hit "back" to go back to here
         }
-        requestSignInAndPermission();
 
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
-
+        requestSignInAndPermission();
         finish();
     }
 
