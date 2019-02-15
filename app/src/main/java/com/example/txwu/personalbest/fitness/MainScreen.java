@@ -45,11 +45,19 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        Button startWalk = (Button)findViewById(R.id.button);
+        Button startWalk = (Button)findViewById(R.id.button_start_walk);
         startWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchWalkActivity();
+            }
+        });
+
+        Button changeGoal = (Button)findViewById(R.id.button_change_goal);
+        changeGoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterNewGoal(v);
             }
         });
 
@@ -66,7 +74,7 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
         Intent intent = new Intent(this, StepService.class);
         startService(intent);
 
-        TextView goalView = findViewById(R.id.goal_text);
+        TextView goalView = findViewById(R.id.text_goal);
         goalView.setText(String.valueOf(goalSteps));
 
         StepsUpdateTask stepsUpdateTask = new StepsUpdateTask(this);
@@ -111,12 +119,11 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 editor2.putInt(date, steps);
             }
         });
-
     }
 
     private void updateGoal() {
         goalSteps = goal.getGoal();
-        TextView goalView = findViewById(R.id.goal_text);
+        TextView goalView = findViewById(R.id.text_goal);
         goalView.setText(String.valueOf(goalSteps));
     }
 

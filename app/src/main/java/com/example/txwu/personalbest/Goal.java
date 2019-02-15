@@ -44,7 +44,7 @@ public class Goal {
             Toast.makeText(activity, "Congratulations for meeting your goal of " + String.valueOf(goal) + " steps!", Toast.LENGTH_SHORT).show();
             setDailyGoalShown("goal");
             try {
-                Button button = activity.findViewById(R.id.button3);
+                Button button = activity.findViewById(R.id.button_change_goal);
                 button.performClick();
             }
             catch (Exception e) {

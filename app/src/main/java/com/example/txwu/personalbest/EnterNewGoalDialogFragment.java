@@ -2,16 +2,16 @@ package com.example.txwu.personalbest;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -44,8 +44,9 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        // get current goal here, need modification
         final Goal goal = new Goal(getActivity(), new Date());
+
+        // gets goal using Goal class
         int currentGoal = goal.getGoal();
 
         final int newGoal = Goal.suggestNextGoal(currentGoal);
@@ -98,7 +99,6 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
                         goal.setGoal(goalCustom, date);
                         Log.d("Changing Goal", "New custom goal: " + goalCustom);
                         listener.onDialogNeutralClick(EnterNewGoalDialogFragment.this);
-
                     }
                 });
 

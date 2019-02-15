@@ -36,21 +36,25 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         prefs = getSharedPreferences("com.exmaple.txwu.personalbest", MODE_PRIVATE);
         Intent i;
         if (!prefs.getBoolean("accepted_terms_and_privacy", false) || prefs.getLong("user_height", 0) == 0) {
             i = new Intent(getApplicationContext(), InitActivity.class);
-            startActivity(i);
+            // https://stackoverflow.com/questions/18957125/how-to-finish-activity-when-starting-other-activity-in-android/18957237
+            // cant hit "back" to go back to here
         }
         else {
             i = new Intent(getApplicationContext(), MainScreen.class);
-            startActivity(i);
+            // https://stackoverflow.com/questions/18957125/how-to-finish-activity-when-starting-other-activity-in-android/18957237
+            // cant hit "back" to go back to here
         }
-
         requestSignInAndPermission();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
 
         finish();
     }
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity{
 
         return super.onOptionsItemSelected(item);
     }
-
 
     private void requestSignInAndPermission() {
         FitnessOptions fitnessOptions = FitnessOptions.builder()
