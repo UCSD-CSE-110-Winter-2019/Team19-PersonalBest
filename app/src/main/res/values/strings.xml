@@ -14,4 +14,6 @@
     <string name="dialog_not_now">Not Now</string>
     <string name="dialog_custom">Use Custom</string>
     <string name="dialog_hint">Enter Custom</string>
+    <string name="goal_button">Goal:</string>
+    <string name="default_goal">Goal</string>
 </resources>

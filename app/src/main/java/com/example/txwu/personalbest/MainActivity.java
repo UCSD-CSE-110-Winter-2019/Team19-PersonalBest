@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         StepsUpdateTask stepsUpdateTask = new StepsUpdateTask(this);
         stepsUpdateTask.addObserver(this);
-
     }
 
     private boolean isFirstTimeOpenApp = true;
@@ -155,5 +155,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     GoogleSignIn.getLastSignedInAccount(this),
                     fitnessOptions);
         }
+    }
+
+    public void enterNewGoal(View view) {
+        DialogFragment enterNewGoalDialogFragment = new EnterNewGoalDialogFragment();
+        enterNewGoalDialogFragment.show(getSupportFragmentManager(), "new goal");
     }
 }
