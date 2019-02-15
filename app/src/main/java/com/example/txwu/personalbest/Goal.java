@@ -2,7 +2,11 @@ package com.example.txwu.personalbest;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.txwu.personalbest.fitness.MainScreen;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,6 +43,13 @@ public class Goal {
         if (!checkIfDailyGoalShown("goal") && this.steps >= goal) {
             Toast.makeText(activity, "Congratulations for meeting your goal of " + String.valueOf(goal) + " steps!", Toast.LENGTH_SHORT).show();
             setDailyGoalShown("goal");
+            try {
+                Button button = activity.findViewById(R.id.button3);
+                button.performClick();
+            }
+            catch (Exception e) {
+                Log.d("Goal Met", "Exception when prompting to set new goal");
+            }
         }
     }
 
@@ -85,5 +96,49 @@ public class Goal {
      */
     public static int suggestNextGoal(int currentGoal) {
         return currentGoal + 500;
+    }
+
+    /**
+     * get the current goal used
+     * @return the current goal
+     */
+    public int getGoal() {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("Goal", MODE_PRIVATE);
+        int goal = sharedPreferences.getInt("default_goal", 5000);
+        return goal;
+    }
+
+    /**
+     * Get goal for a day that has past
+     * @param date - the date to get the goal
+     * @return the goal on date
+     */
+    public int getGoal(String date) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("Goal", MODE_PRIVATE);
+        int goal = sharedPreferences.getInt(date, 5000);
+        return goal;
+    }
+
+    /**
+     * Sets a new goal
+     * @param newGoal - the new goal
+     */
+    public void setGoal(int newGoal) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("Goal", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("default_goal", newGoal);
+        editor.apply();
+    }
+
+    /**
+     * Sets the goal of a particular date
+     * @param newGoal - the new goal
+     * @param date - date to be set
+     */
+    public void setGoal(int newGoal, String date) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("Goal", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(date, newGoal);
+        editor.apply();
     }
 }

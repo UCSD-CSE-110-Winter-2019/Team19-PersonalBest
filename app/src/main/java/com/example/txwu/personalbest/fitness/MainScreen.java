@@ -26,7 +26,7 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainScreen extends AppCompatActivity implements Observer {
+public class MainScreen extends AppCompatActivity implements Observer, EnterNewGoalDialogFragment.NoticeDialogListener {
     private String fitnessServiceKey = "GOOGLE_FIT";
 
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
@@ -36,7 +36,7 @@ public class MainScreen extends AppCompatActivity implements Observer {
     private TextView textSteps;
     //private FitnessService fitnessService;
     private Goal goal;
-    private int goalSteps = 10;
+    private int goalSteps;
     private int stepsPrev;
     private int stepsSubgoal = 500;
 
@@ -57,6 +57,7 @@ public class MainScreen extends AppCompatActivity implements Observer {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 8);
         goal = new Goal(this, cal.getTime());
+        goalSteps = goal.getGoal();
 
         String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
         SharedPreferences sharedPreferences =getSharedPreferences("PersonalBest", MODE_PRIVATE);
@@ -64,6 +65,9 @@ public class MainScreen extends AppCompatActivity implements Observer {
 
         Intent intent = new Intent(this, StepService.class);
         startService(intent);
+
+        TextView goalView = findViewById(R.id.goal_text);
+        goalView.setText(String.valueOf(goalSteps));
 
         StepsUpdateTask stepsUpdateTask = new StepsUpdateTask(this);
         stepsUpdateTask.addObserver(this);
@@ -92,16 +96,37 @@ public class MainScreen extends AppCompatActivity implements Observer {
                 goal.setSteps(steps);
                 goal.showMeetGoal(goalSteps);
                 textSteps.setText(String.valueOf(steps));
+                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
+
                 if (steps >= stepsPrev + stepsSubgoal) {
-                    String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
                     SharedPreferences sharedPreferences =
                             getSharedPreferences("PersonalBest", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt(date + "stepsPrev", (int) steps);
                     editor.apply();
                 }
+
+                SharedPreferences sharedPreferences = getSharedPreferences("Steps", MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = sharedPreferences.edit();
+                editor2.putInt(date, steps);
             }
         });
 
+    }
+
+    private void updateGoal() {
+        goalSteps = goal.getGoal();
+        TextView goalView = findViewById(R.id.goal_text);
+        goalView.setText(String.valueOf(goalSteps));
+    }
+
+    @Override
+    public void onDialogNeutralClick(DialogFragment dialog) {
+        updateGoal();
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        updateGoal();
     }
 }
