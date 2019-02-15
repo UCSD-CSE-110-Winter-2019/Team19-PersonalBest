@@ -120,7 +120,7 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
             }
         });
     }
-
+    
     private void updateGoal() {
         goalSteps = goal.getGoal();
         TextView goalView = findViewById(R.id.text_goal);
@@ -136,4 +136,5 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
     public void onDialogPositiveClick(DialogFragment dialog) {
         updateGoal();
     }
+
 }
