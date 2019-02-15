@@ -13,7 +13,6 @@
         tools:layout_editor_absoluteX="34dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <!-- text should be 0 in production? -->
         <TextView
             android:id="@+id/textSteps"
             android:layout_width="wrap_content"
