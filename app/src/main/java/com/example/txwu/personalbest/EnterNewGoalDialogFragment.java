@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -17,8 +19,8 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        // get current goal here, need modification
-        int currentGoal = 5000;
+        // gets goal from text field directly
+        int currentGoal = Integer.parseInt(((TextView)getActivity().findViewById(R.id.text_goal)).getText().toString());
 
         final int newGoal = Goal.suggestNextGoal(currentGoal);
         String suggested = String.valueOf(newGoal);
@@ -51,18 +53,15 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         EditText customInput = dialogView.findViewById(R.id.custom_goal);
-                        int goal = newGoal;
-
                         String input = customInput.getText().toString();
                         try {
-                            goal = Integer.parseInt(input);
+                            int goal = Integer.parseInt(input);
+                            ((TextView) getActivity().findViewById(R.id.text_goal)).setText("" + goal);
+                            Log.d("Changing Goal", "New custom goal: " + goal);
+                            EnterNewGoalDialogFragment.this.getDialog().cancel();
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getActivity(), "Enter a valid number.", Toast.LENGTH_SHORT);
                         }
-                        catch (NumberFormatException e) {
-                            goal = newGoal;
-                        }
-
-                        Log.d("Changing Goal", "New custom goal: " + goal);
-                        EnterNewGoalDialogFragment.this.getDialog().cancel();
                     }
                 });
 

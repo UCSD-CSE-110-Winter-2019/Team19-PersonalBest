@@ -148,6 +148,9 @@ public class InitActivity extends AppCompatActivity {
 
     private void endActivity() {
         Intent intent = new Intent(getApplicationContext(), MainScreen.class);
+        // https://stackoverflow.com/questions/18957125/how-to-finish-activity-when-starting-other-activity-in-android/18957237
+        // cant hit "back" to go back to here
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

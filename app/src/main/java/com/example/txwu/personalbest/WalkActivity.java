@@ -178,4 +178,12 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         editor.putInt(dateString, steps);
         editor.apply();
     }
+
+    /**
+     * Ends the walk when back is pressed
+     */
+    @Override
+    public void onBackPressed(){
+        endWalk();
+    }
 }
