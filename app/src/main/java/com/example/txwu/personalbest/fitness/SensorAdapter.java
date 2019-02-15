@@ -15,17 +15,15 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import com.example.txwu.personalbest.MainActivity;
-
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.SENSOR_SERVICE;
 
 public class SensorAdapter extends Service implements FitnessService, SensorEventListener {
-    private MainActivity activity;
+    private MainScreen activity;
 
-    public SensorAdapter(MainActivity activity) {
+    public SensorAdapter(MainScreen activity) {
         this.activity = activity;
     }
 

@@ -27,6 +27,7 @@ import java.util.Observer;
 
 public class WalkActivity extends AppCompatActivity implements Observer {
 
+    public static boolean isRunning = false;
     public String fitnessServiceKey = "FIT_FOR_WALK";
     private static final String TAG = "WalkActivity";
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
@@ -63,6 +64,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         });
         fitnessService.setup();
 
+        isRunning = true;
         Log.d(TAG, "Walk started.");
     }
 
@@ -147,6 +149,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
 
         Log.d(TAG, "Walk finished.");
 
+        isRunning = false;
         saveWalk(new Date());
         finish();
     }
