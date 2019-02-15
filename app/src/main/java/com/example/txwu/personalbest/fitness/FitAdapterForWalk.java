@@ -186,6 +186,7 @@ public class FitAdapterForWalk implements FitnessService {
                                             : dataPoints.get(0).getValue(Field.FIELD_STEPS).asInt();
 
                                     stepTracker.update(total);
+                                    Log.d(TAG, "Got newest step for walk: " + total);
                                 }
                             }
                     )
@@ -240,6 +241,7 @@ public class FitAdapterForWalk implements FitnessService {
                                             : dataPoints.get(0).getValue(Field.FIELD_DISTANCE).asFloat();
 
                                     activity.setDistance(total);
+                                    Log.d(TAG, "Got newest distance in meters for walk: " + total);
                                 }
                             }
                     )
@@ -293,6 +295,7 @@ public class FitAdapterForWalk implements FitnessService {
                                             : dataPoints.get(0).getValue(Field.FIELD_AVERAGE).asFloat();
 
                                     activity.setSpeed(total);
+                                    Log.d(TAG, "Got newest speed in m/s for walk: " + total);
                                 }
                             }
                     )

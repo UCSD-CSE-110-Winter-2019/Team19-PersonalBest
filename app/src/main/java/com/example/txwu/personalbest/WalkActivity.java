@@ -27,6 +27,7 @@ import java.util.Observer;
 
 public class WalkActivity extends AppCompatActivity implements Observer {
 
+    public static boolean isRunning = false;
     public String fitnessServiceKey = "FIT_FOR_WALK";
     private static final String TAG = "WalkActivity";
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
@@ -63,6 +64,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         });
         fitnessService.setup();
 
+        isRunning = true;
         Log.d(TAG, "Walk started.");
     }
 
@@ -100,6 +102,12 @@ public class WalkActivity extends AppCompatActivity implements Observer {
      */
     public void setSpeed(float speed) {
         walk.setSpeed(speed);
+
+        //convert m/s to MPH
+        speed = (speed*3600)/1600;
+        String speedFormat = String.format(Locale.US, "%.1f", speed);
+        TextView speedView = findViewById(R.id.walk_speed);
+        speedView.setText(speedFormat);
     }
 
     @Override
@@ -141,6 +149,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
 
         Log.d(TAG, "Walk finished.");
 
+        isRunning = false;
         saveWalk(new Date());
         finish();
     }

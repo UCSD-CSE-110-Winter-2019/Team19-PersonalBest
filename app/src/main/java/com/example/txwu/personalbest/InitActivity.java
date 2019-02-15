@@ -23,6 +23,8 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.txwu.personalbest.fitness.MainScreen;
+
 public class InitActivity extends AppCompatActivity {
 
     private SharedPreferences prefs = null;
@@ -145,6 +147,8 @@ public class InitActivity extends AppCompatActivity {
     }
 
     private void endActivity() {
+        Intent intent = new Intent(getApplicationContext(), MainScreen.class);
+        startActivity(intent);
         finish();
     }
 
