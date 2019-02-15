@@ -71,13 +71,14 @@
 
         <Button
             android:id="@+id/end_walk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_below="@id/walk_time"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="120sp"
+            android:background="@drawable/button_red_round"
             android:text="@string/end_walk"
-            android:textSize="70sp" />
+            android:textSize="35sp" />
 
         <ImageView
             android:id="@+id/imageView"
