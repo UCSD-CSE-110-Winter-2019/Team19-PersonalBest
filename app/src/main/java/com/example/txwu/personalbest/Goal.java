@@ -41,13 +41,13 @@ public class Goal {
         else {
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, new Date().getHours());
-            if (cal.get(Calendar.HOUR_OF_DAY) >= 20) {
+            SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+            String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            if (cal.get(Calendar.HOUR_OF_DAY) >= 20 && !sharedPreferences.getBoolean(date+"subgoal", false)) {
                 if (this.steps >= goal*0.8) {
                     Toast.makeText(activity, "You have achieved over 80% of your goal.\n" +
                             "Try meet your goal today", Toast.LENGTH_SHORT).show();
-                    SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                     editor.putBoolean(date + "subgoal", true);
                     editor.apply();
                 }
