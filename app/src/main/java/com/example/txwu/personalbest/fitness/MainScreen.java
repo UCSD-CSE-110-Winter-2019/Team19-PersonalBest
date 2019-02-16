@@ -129,7 +129,18 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
     }
 
     private void updateGoal() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Goal", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int prevIncreasedGoal = sharedPreferences.getInt("prevIncrease", 5000);
         goalSteps = goal.getGoal();
+
+        if (goalSteps >= prevIncreasedGoal + 2000) {
+            Toast.makeText(this, "Your daily goal steps have increase by over 2000.\nGood Job!",
+                    Toast.LENGTH_SHORT).show();
+            editor.putInt("prevIncrease", goalSteps);
+            editor.apply();
+        }
+
         TextView goalView = findViewById(R.id.text_goal);
         goalView.setText(String.valueOf(goalSteps));
     }
