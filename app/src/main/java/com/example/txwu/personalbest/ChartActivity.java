@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.txwu.personalbest.fitness.HistoryClient;
+import com.example.txwu.personalbest.fitness.MainScreen;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -15,12 +17,14 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ChartActivity extends AppCompatActivity {
 
     private BarChart chart;
     private List<BarEntry> entries;
+    private HistoryClient history;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,10 +32,16 @@ public class ChartActivity extends AppCompatActivity {
 
         chart = findViewById(R.id.chart);
 
+        history = new HistoryClient(System.currentTimeMillis() + MainScreen.timedif, this);
         // updateChart();
     }
 
     private void updateChart() {
+
+        int[] goals = history.getGoalsForWeek();
+        int[] intentionals = history.getIntentional();
+        int[] incidentals = history.getIncidentals();
+
         entries = new ArrayList<>();
         // add data to entries
         // BarEntry stackedEntry = new BarEntry(0f, new float[] { 10, 20, 30 });
