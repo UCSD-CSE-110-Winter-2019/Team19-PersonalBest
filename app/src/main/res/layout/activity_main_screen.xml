@@ -63,19 +63,28 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="100dp"
             android:background="@drawable/button_bg_round"
             android:text="@string/start_walk_button"
             android:textColor="#333399"
             android:textSize="35sp" />
+        <Button
+            android:id="@+id/button_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/update_button"
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:id="@+id/button_statistics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="10dp"
             android:text="@string/stats" />
+
+
 
     </LinearLayout>
 

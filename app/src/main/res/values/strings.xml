@@ -18,4 +18,5 @@
     <string name="default_goal">Goal</string>
     <string name="default_speed">0.0</string>
     <string name="speed_unit">MPH</string>
+    <string name="update_button">UPDATE</string>
 </resources>
