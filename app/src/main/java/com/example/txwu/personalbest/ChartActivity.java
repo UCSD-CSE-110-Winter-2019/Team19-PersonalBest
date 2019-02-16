@@ -95,4 +95,21 @@ public class ChartActivity extends AppCompatActivity {
         chart.groupBars(0f, groupSpace, barSpace);
         chart.invalidate(); // refresh the chart
     }
+
+    /**
+     * Setter of history client
+     * @param history - the history client used to make chart
+     */
+    public void setHistoryClient(HistoryClient history) {
+        this.history = history;
+        updateChart();
+    }
+
+    /**
+     * getter of chart
+     * @return - bar chart
+     */
+    public BarChart getChart() {
+        return chart;
+    }
 }

@@ -46,4 +46,5 @@ dependencies {
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'junit:junit:4.12'
 }
