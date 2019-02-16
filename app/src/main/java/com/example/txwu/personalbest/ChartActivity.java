@@ -16,9 +16,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ChartActivity extends AppCompatActivity {
 
@@ -50,10 +52,6 @@ public class ChartActivity extends AppCompatActivity {
             entriesGoal.add(new BarEntry(i, goals[i]));
             entriesStep.add(new BarEntry(i, new float[] {incidentals[i], intentionals[i]}));
         }
-        // add data to entries
-        // BarEntry stackedEntry = new BarEntry(0f, new float[] { 10, 20, 30 });
-        // public BarEntry(float x, float [] yValues) { ... }
-        // https://github.com/PhilJay/MPAndroidChart/wiki/Setting-Data#stacked-barchart
 
         BarDataSet goalSet = new BarDataSet(entriesGoal, "Goal");
         BarDataSet stepSet = new BarDataSet(entriesStep, "Steps");
@@ -61,44 +59,40 @@ public class ChartActivity extends AppCompatActivity {
 
         goalSet.setColor(Color.RED);
         stepSet.setColors(Color.GREEN, Color.BLUE);
-        //set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        //set.setDrawIcons(false);
-        //set.setColors();
-        //set.setStackLabels(new String[]{"Intentional", "Incidental"});
-        //ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        //dataSets.add(set);
 
 
         // the labels that should be drawn on the XAxis
-        final String[] quarters = history.getDateFormat(); // etc the dates for the x axis
-
         IAxisValueFormatter formatter = new IAxisValueFormatter() {
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return quarters[(int) value];
+                long millis = history.getFirstDayTimeMillis();
+                millis += (int)value * history.millisADay;
+                return new SimpleDateFormat("MM-dd", Locale.US).format(new Date(millis));
             }
 
-            // we don't draw numbers, so no decimal digits needed
         };
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setCenterAxisLabels(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+        xAxis.setDrawGridLines(true);
+        xAxis.setValueFormatter(formatter);
         xAxis.setAvoidFirstLastClipping(true);
-        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-        //xAxis.setValueFormatter(formatter);
+        xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(7);
 
         BarData data = new BarData(stepSet, goalSet);
-        data.setBarWidth(0.5f);
+        data.setBarWidth(0.45f);
         // data.setValueFormatter(new MyValueFormatter);
         data.setValueTextColor(Color.BLACK);
 
-        float groupSpace = 0.06f;
+        float groupSpace = 0.1f;
         float barSpace = 0f;
 
         chart.setData(data);
         chart.setFitBars(true);
-        chart.groupBars(-1f, groupSpace, barSpace);
+        chart.groupBars(0f, groupSpace, barSpace);
         chart.invalidate(); // refresh the chart
     }
 }

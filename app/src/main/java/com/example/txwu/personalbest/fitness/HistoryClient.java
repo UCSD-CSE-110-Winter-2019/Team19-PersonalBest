@@ -99,4 +99,12 @@ public class HistoryClient {
         }
         return incidentals;
     }
+
+    /**
+     * Get the time millis for the first day
+     * @return - time millis for first day
+     */
+    public long getFirstDayTimeMillis() {
+        return currentTimeMillis - 6 * millisADay;
+    }
 }
