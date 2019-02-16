@@ -11,6 +11,7 @@ import com.example.txwu.personalbest.fitness.MainScreen;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,9 +41,11 @@ public class Goal {
         }
         else {
             Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, new Date().getHours());
+            cal.set(Calendar.HOUR_OF_DAY,
+                    new Date(System.currentTimeMillis() + MainScreen.timedif).getHours());
             SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
-            String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                    .format(new Date(System.currentTimeMillis() + MainScreen.timedif));
             if (cal.get(Calendar.HOUR_OF_DAY) >= 20 && !sharedPreferences.getBoolean(date+"subgoal", false)) {
                 if (this.steps >= goal*0.8) {
                     Toast.makeText(activity, "You have achieved over 80% of your goal.\n" +
@@ -64,13 +67,14 @@ public class Goal {
         SharedPreferences sharedPreferences3 = activity.getSharedPreferences("Steps", MODE_PRIVATE);
 
         // yesterday's date
-        String previousDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date(System.currentTimeMillis()-24*60*60*1000));
+        String previousDate = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                .format(new Date(System.currentTimeMillis() + MainScreen.timedif - 24*60*60*1000));
 
         // yesterday's goal
         int goalYesterday = sharedPreferences.getInt(previousDate, -1);
         SharedPreferences.Editor editor = sharedPreferences2.edit();
 
-        if (!sharedPreferences2.getBoolean(previousDate + "goal", true)) {
+        if (!sharedPreferences2.getBoolean(previousDate + "goal", false)) {
 
             // yesterday's step
             int stepYesterday = sharedPreferences3.getInt(previousDate, -1);
@@ -78,8 +82,8 @@ public class Goal {
                 Toast.makeText(activity, "Congratulations for meeting your goal of "
                         + String.valueOf(goalYesterday) + " steps yesterday!", Toast.LENGTH_SHORT).show();
             }
-            else if (stepYesterday > (0.8 * goalYesterday)) {
-                if (!sharedPreferences2.getBoolean(previousDate + "subgoal", true))
+            else if (stepYesterday >= (0.8 * goalYesterday)) {
+                if (!sharedPreferences2.getBoolean(previousDate + "subgoal", false))
                 Toast.makeText(activity, "You accomplished over 80% of your goal yesterday, keep up the good work!",
                         Toast.LENGTH_SHORT).show();
             }
@@ -90,7 +94,8 @@ public class Goal {
     }
 
     public boolean checkIfDailyGoalShown(String type) {
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                .format(new Date(System.currentTimeMillis() + MainScreen.timedif));
         SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
         return sharedPreferences.getBoolean(date+type, false);
     }
@@ -99,7 +104,8 @@ public class Goal {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                .format(new Date(System.currentTimeMillis() + MainScreen.timedif));
         editor.putBoolean(date+type, true);
 
         editor.apply();

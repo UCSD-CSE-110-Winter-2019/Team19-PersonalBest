@@ -85,6 +85,55 @@
             android:text="@string/stats" />
 
 
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:id="@+id/button_mock500"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/mock_step"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_stop_mock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/button_mock500"
+                app:layout_constraintBottom_toBottomOf="@id/button_mock500"
+                android:text="@string/stop_mock"/>
+
+            <Button
+                android:id="@+id/button_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plus"
+                app:layout_constraintStart_toEndOf="@id/button_stop_mock"
+                app:layout_constraintBottom_toBottomOf="@id/button_mock500" />
+
+            <Button
+                android:id="@+id/button_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minus"
+                app:layout_constraintStart_toEndOf="@id/button_plus"
+                app:layout_constraintBottom_toBottomOf="@id/button_plus" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+        <EditText
+            android:id="@+id/mock_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
+
 
     </LinearLayout>
 

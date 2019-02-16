@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
     private int goalSteps;
     private int stepsPrev;
     private int stepsSubgoal = 500;
+    private int mockStep;
+    public static long timedif = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,8 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
         goal = new Goal(this, cal.getTime());
         goalSteps = goal.getGoal();
 
-        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
+        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                .format(new Date(System.currentTimeMillis() + timedif));
         SharedPreferences sharedPreferences =getSharedPreferences("PersonalBest", MODE_PRIVATE);
         stepsPrev = sharedPreferences.getInt(date + "stepsPrev", 0);
 
@@ -90,6 +94,52 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
             }
         });
 
+        Button mock = findViewById(R.id.button_mock500);
+        mock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mockStep+=500;
+            }
+        });
+
+        Button stop_mock = findViewById(R.id.button_stop_mock);
+        stop_mock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mockStep = 0;
+                timedif = 0;
+            }
+        });
+
+        final EditText mock_time = findViewById(R.id.mock_time);
+        Button minus = findViewById(R.id.button_minus);
+        Button plus = findViewById(R.id.button_plus);
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    long dif = Long.parseLong(mock_time.getText().toString());
+                    timedif += dif;
+                }
+                catch (Exception e) {
+
+                }
+            }
+        });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    long dif = Long.parseLong(mock_time.getText().toString());
+                    timedif -= dif;
+                }
+                catch (Exception e) {
+
+                }
+            }
+        });
+
         checkForEncouragement();
     }
 
@@ -109,13 +159,14 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
 
     @Override
     public void update(Observable o, Object arg) {
-        final int steps = (int) arg;
+        final int steps = mockStep > 0?mockStep:(int) arg;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 goal.setSteps(steps);
                 textSteps.setText(String.valueOf(steps));
-                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
+                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                        .format(new Date(System.currentTimeMillis() + timedif));
 
                 if (steps >= stepsPrev + stepsSubgoal) {
                     SharedPreferences sharedPreferences =
@@ -131,6 +182,17 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 editor2.apply();
             }
         });
+
+        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                .format(new Date(System.currentTimeMillis() + timedif));
+
+        SharedPreferences sharedPreferences = getSharedPreferences("Goal", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if (sharedPreferences.getInt(date, -1) == -1) {
+            editor.putInt(date, goalSteps);
+            editor.apply();
+        }
     }
 
     /**

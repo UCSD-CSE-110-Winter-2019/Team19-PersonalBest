@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.txwu.personalbest.fitness.FitAdapterForWalk;
 import com.example.txwu.personalbest.fitness.FitnessService;
+import com.example.txwu.personalbest.fitness.MainScreen;
 import com.example.txwu.personalbest.fitness.Walk;
 
 import java.text.SimpleDateFormat;
@@ -47,7 +48,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
 
         // create new Walk object using current time
         Calendar cal = Calendar.getInstance();
-        Date now = new Date();
+        Date now = new Date(System.currentTimeMillis() + MainScreen.timedif);
         cal.setTime(now);
         long time = cal.getTimeInMillis();
         walk = new Walk(time);
@@ -150,7 +151,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         Log.d(TAG, "Walk finished.");
 
         isRunning = false;
-        saveWalk(new Date());
+        saveWalk(new Date(System.currentTimeMillis() + MainScreen.timedif));
         finish();
     }
 
