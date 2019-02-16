@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.txwu.personalbest.ChartActivity;
 import com.example.txwu.personalbest.EnterNewGoalDialogFragment;
 import com.example.txwu.personalbest.Goal;
 import com.example.txwu.personalbest.R;
@@ -46,7 +47,7 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        Button startWalk = (Button)findViewById(R.id.button_start_walk);
+        final Button startWalk = (Button)findViewById(R.id.button_start_walk);
         startWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +141,14 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
             }
         });
 
+        Button stats = findViewById(R.id.button_statistics);
+        stats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainScreen.this, ChartActivity.class);
+                startActivity(intent);
+            }
+        });
         checkForEncouragement();
     }
 

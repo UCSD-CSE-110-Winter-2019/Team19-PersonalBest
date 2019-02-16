@@ -23,7 +23,8 @@ import java.util.List;
 public class ChartActivity extends AppCompatActivity {
 
     private BarChart chart;
-    private List<BarEntry> entries;
+    private List<BarEntry> entriesGoal;
+    private List<BarEntry> entriesStep;
     private HistoryClient history;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class ChartActivity extends AppCompatActivity {
         chart = findViewById(R.id.chart);
 
         history = new HistoryClient(System.currentTimeMillis() + MainScreen.timedif, this);
-        // updateChart();
+        updateChart();
     }
 
     private void updateChart() {
@@ -42,23 +43,34 @@ public class ChartActivity extends AppCompatActivity {
         int[] intentionals = history.getIntentional();
         int[] incidentals = history.getIncidentals();
 
-        entries = new ArrayList<>();
+        entriesGoal = new ArrayList<>();
+        entriesStep = new ArrayList<>();
+
+        for (int i = 0; i < goals.length; i++) {
+            entriesGoal.add(new BarEntry(i, goals[i]));
+            entriesStep.add(new BarEntry(i, new float[] {incidentals[i], intentionals[i]}));
+        }
         // add data to entries
         // BarEntry stackedEntry = new BarEntry(0f, new float[] { 10, 20, 30 });
         // public BarEntry(float x, float [] yValues) { ... }
         // https://github.com/PhilJay/MPAndroidChart/wiki/Setting-Data#stacked-barchart
 
-        BarDataSet set = new BarDataSet(entries, , "Weekly Statistics");
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setDrawIcons(false);
-        set.setColors();
-        set.setStackLabels(new String[]{"Intentional", "Incidental"});
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(set);
+        BarDataSet goalSet = new BarDataSet(entriesGoal, "Goal");
+        BarDataSet stepSet = new BarDataSet(entriesStep, "Steps");
+        stepSet.setStackLabels(new String[] {"Incidental", "Intentional"});
+
+        goalSet.setColor(Color.RED);
+        stepSet.setColors(Color.GREEN, Color.BLUE);
+        //set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        //set.setDrawIcons(false);
+        //set.setColors();
+        //set.setStackLabels(new String[]{"Intentional", "Incidental"});
+        //ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        //dataSets.add(set);
 
 
         // the labels that should be drawn on the XAxis
-        final String[] quarters = new String[] { "4-14-2019" }; // etc the dates for the x axis
+        final String[] quarters = history.getDateFormat(); // etc the dates for the x axis
 
         IAxisValueFormatter formatter = new IAxisValueFormatter() {
 
@@ -68,20 +80,25 @@ public class ChartActivity extends AppCompatActivity {
             }
 
             // we don't draw numbers, so no decimal digits needed
-            @Override
-            public int getDecimalDigits() {  return 0; }
         };
 
         XAxis xAxis = chart.getXAxis();
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setAvoidFirstLastClipping(true);
         xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-        xAxis.setValueFormatter(formatter);
+        //xAxis.setValueFormatter(formatter);
 
-        BarData data = new BarData(dataSets);
-        // data.setValueFormatter(new MyValueFormatter);
-        //data.setValueTextColor(Color.WHITE);
+        BarData data = new BarData(stepSet, goalSet);
         data.setBarWidth(0.5f);
+        // data.setValueFormatter(new MyValueFormatter);
+        data.setValueTextColor(Color.BLACK);
+
+        float groupSpace = 0.06f;
+        float barSpace = 0f;
+
         chart.setData(data);
         chart.setFitBars(true);
+        chart.groupBars(-1f, groupSpace, barSpace);
         chart.invalidate(); // refresh the chart
     }
 }
