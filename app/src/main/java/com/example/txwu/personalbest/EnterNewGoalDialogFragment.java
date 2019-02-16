@@ -2,6 +2,7 @@ package com.example.txwu.personalbest;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -10,22 +11,52 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class EnterNewGoalDialogFragment extends DialogFragment {
 
+    public interface NoticeDialogListener {
+        public void onDialogNeutralClick(DialogFragment dialog);
+        public void onDialogPositiveClick(DialogFragment dialog);
+    }
+
+    NoticeDialogListener listener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (NoticeDialogListener) context;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(getActivity().toString()
+                    + " must implement NoticeDialogListener");
+        }
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        // get current goal here, need modification
-        int currentGoal = 5000;
+        final Goal goal = new Goal(getActivity(), new Date());
+
+        // gets goal using Goal class
+        int currentGoal = goal.getGoal();
 
         final int newGoal = Goal.suggestNextGoal(currentGoal);
-        String suggested = String.valueOf(newGoal);
+        final String suggested = String.valueOf(newGoal);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_change_goal, null);
+
+        final String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
 
         builder.setTitle(R.string.dialog_choose_goal)
                 .setView(dialogView)
@@ -41,9 +72,11 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+                        goal.setGoal(newGoal);
+                        goal.setGoal(newGoal, date);
                         // use suggested goal here
                         Log.d("Changing Goal", "User used suggested goal: " + newGoal);
-                        EnterNewGoalDialogFragment.this.getDialog().cancel();
+                        listener.onDialogPositiveClick(EnterNewGoalDialogFragment.this);
                     }
                 })
                 .setNeutralButton(R.string.dialog_custom, new DialogInterface.OnClickListener() {
@@ -51,18 +84,21 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         EditText customInput = dialogView.findViewById(R.id.custom_goal);
-                        int goal = newGoal;
+                        int goalCustom = newGoal;
 
                         String input = customInput.getText().toString();
                         try {
-                            goal = Integer.parseInt(input);
+                            goalCustom = Integer.parseInt(input);
                         }
                         catch (NumberFormatException e) {
-                            goal = newGoal;
+                            Toast.makeText(getActivity(),"Not a valid input, suggested goal used!", Toast.LENGTH_SHORT).show();
+                            goalCustom = newGoal;
                         }
 
-                        Log.d("Changing Goal", "New custom goal: " + goal);
-                        EnterNewGoalDialogFragment.this.getDialog().cancel();
+                        goal.setGoal(goalCustom);
+                        goal.setGoal(goalCustom, date);
+                        Log.d("Changing Goal", "New custom goal: " + goalCustom);
+                        listener.onDialogNeutralClick(EnterNewGoalDialogFragment.this);
                     }
                 });
 

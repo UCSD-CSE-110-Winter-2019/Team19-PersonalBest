@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.example.txwu.personalbest.fitness.GoogleFitAdapter;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 public class StepService extends Service {
     Context context = this;
     public StepService() {
@@ -20,9 +24,20 @@ public class StepService extends Service {
 
         @Override
         public void run() {
-            SensorCollector sensorCollector = new SensorCollector(context);
-            System.out.println("sensorcollector created");
-            sensorCollector.setup();
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(StepService.this);
+
+            if (account == null) {
+                // not signed in, use sensor API
+                SensorCollector sensorCollector = new SensorCollector(context);
+                System.out.println("sensorcollector created");
+                sensorCollector.setup();
+            }
+
+            else {
+                // signed in, use Google Fit
+                GoogleFitAdapter adapter = new GoogleFitAdapter(StepService.this);
+                adapter.setup();
+            }
         }
     }
 
@@ -34,7 +49,7 @@ public class StepService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(StepService.this,"Service Started!", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(StepService.this,"Service Started!", Toast.LENGTH_SHORT).show();
         Thread thread = new Thread(new MyThread(startId));
         System.out.println("about to start new thread");
         thread.start();

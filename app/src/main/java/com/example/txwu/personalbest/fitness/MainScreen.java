@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.txwu.personalbest.EnterNewGoalDialogFragment;
 import com.example.txwu.personalbest.Goal;
@@ -26,7 +27,7 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainScreen extends AppCompatActivity implements Observer {
+public class MainScreen extends AppCompatActivity implements Observer, EnterNewGoalDialogFragment.NoticeDialogListener {
     private String fitnessServiceKey = "GOOGLE_FIT";
 
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
@@ -36,7 +37,7 @@ public class MainScreen extends AppCompatActivity implements Observer {
     private TextView textSteps;
     //private FitnessService fitnessService;
     private Goal goal;
-    private int goalSteps = 10;
+    private int goalSteps;
     private int stepsPrev;
     private int stepsSubgoal = 500;
 
@@ -45,7 +46,7 @@ public class MainScreen extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        Button startWalk = (Button)findViewById(R.id.button);
+        Button startWalk = (Button)findViewById(R.id.button_start_walk);
         startWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,22 +54,38 @@ public class MainScreen extends AppCompatActivity implements Observer {
             }
         });
 
+        Button changeGoal = (Button)findViewById(R.id.button_change_goal);
+        changeGoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterNewGoal(v);
+            }
+        });
+
         textSteps = findViewById(R.id.textSteps);
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 8);
         goal = new Goal(this, cal.getTime());
+        goalSteps = goal.getGoal();
 
         String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
         SharedPreferences sharedPreferences =getSharedPreferences("PersonalBest", MODE_PRIVATE);
         stepsPrev = sharedPreferences.getInt(date + "stepsPrev", 0);
 
-        requestSignInAndPermission();
-
         Intent intent = new Intent(this, StepService.class);
         startService(intent);
 
+        TextView goalView = findViewById(R.id.text_goal);
+        goalView.setText(String.valueOf(goalSteps));
+
         StepsUpdateTask stepsUpdateTask = new StepsUpdateTask(this);
         stepsUpdateTask.addObserver(this);
+
+        SharedPreferences stepsPref = getSharedPreferences("Steps", MODE_PRIVATE);
+        goal.setSteps(stepsPref.getInt(date, -1));
+
+        goal.showMeetGoal(goalSteps);
+        goal.showMeetGoalYesterday();
     }
 
     /**
@@ -77,27 +94,6 @@ public class MainScreen extends AppCompatActivity implements Observer {
     public void launchWalkActivity() {
         Intent intent = new Intent(this, WalkActivity.class);
         startActivity(intent);
-    }
-
-    private void requestSignInAndPermission() {
-        FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_DISTANCE_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_SPEED, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_SPEED_SUMMARY, FitnessOptions.ACCESS_READ)
-                .build();
-
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    this, // your activity
-                    System.identityHashCode(this) & 0xFFFF,
-                    GoogleSignIn.getLastSignedInAccount(this),
-                    fitnessOptions);
-        }
     }
 
     public void enterNewGoal(View view) {
@@ -113,18 +109,46 @@ public class MainScreen extends AppCompatActivity implements Observer {
             @Override
             public void run() {
                 goal.setSteps(steps);
-                goal.showMeetGoal(goalSteps);
                 textSteps.setText(String.valueOf(steps));
+                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
+
                 if (steps >= stepsPrev + stepsSubgoal) {
-                    String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
                     SharedPreferences sharedPreferences =
                             getSharedPreferences("PersonalBest", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt(date + "stepsPrev", (int) steps);
                     editor.apply();
                 }
+
+                SharedPreferences sharedPreferences = getSharedPreferences("Steps", MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = sharedPreferences.edit();
+                editor2.putInt(date, steps);
+                editor2.apply();
             }
         });
-
     }
+
+    private void updateGoal() {
+        goalSteps = goal.getGoal();
+        TextView goalView = findViewById(R.id.text_goal);
+        goalView.setText(String.valueOf(goalSteps));
+    }
+
+    @Override
+    public void onDialogNeutralClick(DialogFragment dialog) {
+        updateGoal();
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        updateGoal();
+    }
+
+    @Override
+    public void onResume() {
+        goal.showMeetGoal(goalSteps);
+        goal.showMeetGoalYesterday();
+        super.onResume();
+    }
+
 }

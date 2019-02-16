@@ -36,20 +36,25 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         prefs = getSharedPreferences("com.exmaple.txwu.personalbest", MODE_PRIVATE);
         Intent i;
         if (!prefs.getBoolean("accepted_terms_and_privacy", false) || prefs.getLong("user_height", 0) == 0) {
             i = new Intent(getApplicationContext(), InitActivity.class);
-            startActivity(i);
+            // https://stackoverflow.com/questions/18957125/how-to-finish-activity-when-starting-other-activity-in-android/18957237
+            // cant hit "back" to go back to here
         }
         else {
             i = new Intent(getApplicationContext(), MainScreen.class);
-            startActivity(i);
+            // https://stackoverflow.com/questions/18957125/how-to-finish-activity-when-starting-other-activity-in-android/18957237
+            // cant hit "back" to go back to here
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        //i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        requestSignInAndPermission();
         finish();
     }
 
@@ -73,6 +78,27 @@ public class MainActivity extends AppCompatActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void requestSignInAndPermission() {
+        FitnessOptions fitnessOptions = FitnessOptions.builder()
+                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
+                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_DISTANCE_CUMULATIVE, FitnessOptions.ACCESS_WRITE)
+                .addDataType(DataType.AGGREGATE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_SPEED, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.AGGREGATE_SPEED_SUMMARY, FitnessOptions.ACCESS_READ)
+                .build();
+
+        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                    this, // your activity
+                    System.identityHashCode(this) & 0xFFFF,
+                    GoogleSignIn.getLastSignedInAccount(this),
+                    fitnessOptions);
+        }
     }
 
 }
