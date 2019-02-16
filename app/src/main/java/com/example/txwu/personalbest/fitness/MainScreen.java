@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,14 +29,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class MainScreen extends AppCompatActivity implements Observer, EnterNewGoalDialogFragment.NoticeDialogListener {
-    private String fitnessServiceKey = "GOOGLE_FIT";
 
-    public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
-
-    private static final String TAG = "StepCountActivity";
+    private static final String TAG = "MainScreen";
 
     private TextView textSteps;
-    //private FitnessService fitnessService;
     private Goal goal;
     private int goalSteps;
     private int stepsPrev;
@@ -84,8 +81,16 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
         SharedPreferences stepsPref = getSharedPreferences("Steps", MODE_PRIVATE);
         goal.setSteps(stepsPref.getInt(date, -1));
 
-        goal.showMeetGoal(goalSteps);
-        goal.showMeetGoalYesterday();
+        // the update button checks for encouragements
+        Button update = findViewById(R.id.button_update);
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkForEncouragement();
+            }
+        });
+
+        checkForEncouragement();
     }
 
     /**
@@ -128,8 +133,24 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
         });
     }
 
+    /**
+     * updates the goal
+     */
     private void updateGoal() {
+
+        Log.d(TAG, "Updating Goal Steps");
+        SharedPreferences sharedPreferences = getSharedPreferences("Goal", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int prevIncreasedGoal = sharedPreferences.getInt("prevIncrease", 5000);
         goalSteps = goal.getGoal();
+
+        if (goalSteps >= prevIncreasedGoal + 2000) {
+            Toast.makeText(this, "Your daily goal steps have increased by over 2000.\nGood Job!",
+                    Toast.LENGTH_SHORT).show();
+            editor.putInt("prevIncrease", goalSteps);
+            editor.apply();
+        }
+
         TextView goalView = findViewById(R.id.text_goal);
         goalView.setText(String.valueOf(goalSteps));
     }
@@ -146,9 +167,16 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
 
     @Override
     public void onResume() {
-        goal.showMeetGoal(goalSteps);
-        goal.showMeetGoalYesterday();
+        Log.d(TAG, "MainScreen Resumed");
+        checkForEncouragement();
         super.onResume();
     }
 
+    /**
+     * Checks for whether encouragements need to be shown
+     */
+    private void checkForEncouragement() {
+        goal.showMeetGoal(goalSteps);
+        goal.showMeetGoalYesterday();
+    }
 }
