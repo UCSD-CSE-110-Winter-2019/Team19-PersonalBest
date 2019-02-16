@@ -40,7 +40,7 @@ public class MainScreenTest {
     @Test
     public void mainScreenTest() {
         ViewInteraction button = onView(
-                allOf(withId(R.id.button),
+                allOf(withId(R.id.button_start_walk),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class),
@@ -50,7 +50,7 @@ public class MainScreenTest {
         button.check(matches(isDisplayed()));
 
         ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.button), withText("Start Walk"),
+                allOf(withId(R.id.button_start_walk), withText("Start Walk"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.support.constraint.ConstraintLayout")),
@@ -72,7 +72,7 @@ public class MainScreenTest {
         button2.perform(click());
 
         ViewInteraction button3 = onView(
-                allOf(withId(R.id.button),
+                allOf(withId(R.id.button_start_walk),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class),
