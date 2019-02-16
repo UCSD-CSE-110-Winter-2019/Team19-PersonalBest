@@ -45,6 +45,11 @@ public class Goal {
                 if (this.steps >= goal*0.8) {
                     Toast.makeText(activity, "You have achieved over 80% of your goal.\n" +
                             "Try meet your goal today", Toast.LENGTH_SHORT).show();
+                    SharedPreferences sharedPreferences = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                    editor.putBoolean(date + "subgoal", true);
+                    editor.apply();
                 }
             }
         }
@@ -74,11 +79,13 @@ public class Goal {
                         + String.valueOf(goalYesterday) + " steps yesterday!", Toast.LENGTH_SHORT).show();
             }
             else if (stepYesterday > (0.8 * goalYesterday)) {
+                if (!sharedPreferences2.getBoolean(previousDate + "subgoal", true))
                 Toast.makeText(activity, "You accomplished over 80% of your goal yesterday, keep up the good work!",
                         Toast.LENGTH_SHORT).show();
             }
 
             editor.putBoolean(previousDate+"goal", true);
+            editor.apply();
         }
     }
 
