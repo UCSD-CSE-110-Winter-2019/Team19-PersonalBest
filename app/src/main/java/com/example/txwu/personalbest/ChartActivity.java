@@ -58,7 +58,7 @@ public class ChartActivity extends AppCompatActivity {
         stepSet.setStackLabels(new String[] {"Incidental", "Intentional"});
 
         goalSet.setColor(Color.RED);
-        stepSet.setColors(Color.GREEN, Color.BLUE);
+        stepSet.setColors(Color.BLUE, Color.GREEN);
 
 
         // the labels that should be drawn on the XAxis
