@@ -106,6 +106,18 @@
             android:maxHeight="30dp"
             app:srcCompat="@drawable/walk_image" />
 
+        <Button
+            android:id="@+id/mock_in_walk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/end_walk"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="163dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="157dp"
+            android:text="@string/mock_step" />
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

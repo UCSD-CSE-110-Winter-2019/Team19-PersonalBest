@@ -32,6 +32,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
     public String fitnessServiceKey = "FIT_FOR_WALK";
     private static final String TAG = "WalkActivity";
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
+    private int mock_amount = 0;
 
     public Walk walk;
     private FitnessService fitnessService;
@@ -65,6 +66,15 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         });
         fitnessService.setup();
 
+        Button mock = findViewById(R.id.mock_in_walk);
+        mock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WalkActivity.this.mock_amount += 500;
+                setSteps(0);
+            }
+        });
+
         isRunning = true;
         Log.d(TAG, "Walk started.");
     }
@@ -74,17 +84,23 @@ public class WalkActivity extends AppCompatActivity implements Observer {
      * @param step - step taken
      */
     public void setSteps(long step) {
-        walk.setSteps((int) step);
         TextView step_count = findViewById(R.id.walk_step_counter);
         TextView time = findViewById(R.id.walk_time);
-        long seconds = (walk.EndTime() - walk.StartTime())/1000;
-        long minutes = seconds/60;
-        long hours = minutes/60;
-        seconds = seconds%60;
-        minutes = minutes%60;
+        if (mock_amount == 0) {
+            walk.setSteps((int) step);
+            long seconds = (walk.EndTime() - walk.StartTime()) / 1000;
+            long minutes = seconds / 60;
+            long hours = minutes / 60;
+            seconds = seconds % 60;
+            minutes = minutes % 60;
 
-        time.setText(String.format(Locale.US,"%d:%02d:%02d", hours, minutes, seconds));
-        step_count.setText(String.format(Locale.US,"%d", walk.getSteps()));
+            time.setText(String.format(Locale.US, "%d:%02d:%02d", hours, minutes, seconds));
+            step_count.setText(String.format(Locale.US, "%d", walk.getSteps()));
+        }
+        else {
+            step_count.setText(String.format(Locale.US, "%d", mock_amount));
+            walk.setSteps(mock_amount);
+        }
     }
 
     /**
