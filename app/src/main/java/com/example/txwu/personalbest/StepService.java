@@ -49,7 +49,7 @@ public class StepService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(StepService.this,"Service Started!", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(StepService.this,"Service Started!", Toast.LENGTH_SHORT).show();
         Thread thread = new Thread(new MyThread(startId));
         System.out.println("about to start new thread");
         thread.start();

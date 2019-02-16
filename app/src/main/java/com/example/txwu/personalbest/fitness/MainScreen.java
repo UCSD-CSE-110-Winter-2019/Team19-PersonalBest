@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.txwu.personalbest.EnterNewGoalDialogFragment;
 import com.example.txwu.personalbest.Goal;
@@ -79,6 +80,12 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
 
         StepsUpdateTask stepsUpdateTask = new StepsUpdateTask(this);
         stepsUpdateTask.addObserver(this);
+
+        SharedPreferences stepsPref = getSharedPreferences("Steps", MODE_PRIVATE);
+        goal.setSteps(stepsPref.getInt(date, -1));
+
+        goal.showMeetGoal(goalSteps);
+        goal.showMeetGoalYesterday();
     }
 
     /**
@@ -102,7 +109,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
             @Override
             public void run() {
                 goal.setSteps(steps);
-                goal.showMeetGoal(goalSteps);
                 textSteps.setText(String.valueOf(steps));
                 String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
 
@@ -117,6 +123,7 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 SharedPreferences sharedPreferences = getSharedPreferences("Steps", MODE_PRIVATE);
                 SharedPreferences.Editor editor2 = sharedPreferences.edit();
                 editor2.putInt(date, steps);
+                editor2.apply();
             }
         });
     }
@@ -135,6 +142,13 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         updateGoal();
+    }
+
+    @Override
+    public void onResume() {
+        goal.showMeetGoal(goalSteps);
+        goal.showMeetGoalYesterday();
+        super.onResume();
     }
 
 }

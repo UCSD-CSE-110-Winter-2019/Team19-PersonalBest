@@ -19,29 +19,14 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Goal {
     private Activity activity;
-    private Timer t;
-    private TimerTask goalTask;
     private long steps;
 
     public Goal(Activity activity, final Date endSubGoalDate) {
         this.activity = activity;
-        goalTask = new TimerTask() {
-            @Override
-            public void run() {
-                Date currentTime = Calendar.getInstance().getTime();
-                if (!checkIfDailyGoalShown("subgoal1") && endSubGoalDate.after(currentTime)) {
-                    showMeetSubGoal();
-                    setDailyGoalShown("subgoal1");
-                }
-            }
-        };
-        t = new Timer();
-        t.schedule(goalTask, 0, 2000);
     }
 
     public void showMeetGoal(long goal) {
         if (!checkIfDailyGoalShown("goal") && this.steps >= goal) {
-            Toast.makeText(activity, "Congratulations for meeting your goal of " + String.valueOf(goal) + " steps!", Toast.LENGTH_SHORT).show();
             setDailyGoalShown("goal");
             try {
                 Button button = activity.findViewById(R.id.button_change_goal);
@@ -50,6 +35,50 @@ public class Goal {
             catch (Exception e) {
                 Log.d("Goal Met", "Exception when prompting to set new goal");
             }
+            Toast.makeText(activity, "Congratulations for meeting your goal of " + String.valueOf(goal)
+                    + " steps!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, new Date().getHours());
+            if (cal.get(Calendar.HOUR_OF_DAY) >= 20) {
+                if (this.steps >= goal*0.8) {
+                    Toast.makeText(activity, "You have achieved over 80% of your goal.\n" +
+                            "Try meet your goal today", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    /**
+     * Shows the goal met or sub goal met encouragement from yesterday if it was not shown
+     */
+    public void showMeetGoalYesterday() {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("Goal", MODE_PRIVATE);
+        SharedPreferences sharedPreferences2 = activity.getSharedPreferences("PersonalBest", MODE_PRIVATE);
+        SharedPreferences sharedPreferences3 = activity.getSharedPreferences("Steps", MODE_PRIVATE);
+
+        // yesterday's date
+        String previousDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date(System.currentTimeMillis()-24*60*60*1000));
+
+        // yesterday's goal
+        int goalYesterday = sharedPreferences.getInt(previousDate, -1);
+        SharedPreferences.Editor editor = sharedPreferences2.edit();
+
+        if (!sharedPreferences2.getBoolean(previousDate + "goal", true)) {
+
+            // yesterday's step
+            int stepYesterday = sharedPreferences3.getInt(previousDate, -1);
+            if (stepYesterday > goalYesterday) {
+                Toast.makeText(activity, "Congratulations for meeting your goal of "
+                        + String.valueOf(goalYesterday) + " steps yesterday!", Toast.LENGTH_SHORT).show();
+            }
+            else if (stepYesterday > (0.8 * goalYesterday)) {
+                Toast.makeText(activity, "You accomplished over 80% of your goal yesterday, keep up the good work!",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            editor.putBoolean(previousDate+"goal", true);
         }
     }
 
@@ -66,27 +95,11 @@ public class Goal {
         String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
         editor.putBoolean(date+type, true);
 
-        String previousDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date(System.currentTimeMillis()-24*60*60*1000));
-        editor.remove(previousDate+type);
-
         editor.apply();
     }
 
     public void setSteps(long steps) {
         this.steps = steps;
-    }
-
-    public void showMeetSubGoal() {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(activity, "TODO put subgoal here!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void show500StepsSubGoal(){
-        Toast.makeText(activity, "You have reached another 500 steps!", Toast.LENGTH_SHORT).show();
     }
 
     /**
