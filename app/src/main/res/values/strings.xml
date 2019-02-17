@@ -19,4 +19,8 @@
     <string name="default_speed">0.0</string>
     <string name="speed_unit">MPH</string>
     <string name="update_button">UPDATE</string>
+    <string name="mock_step">MOCK 500</string>
+    <string name="stop_mock">STOPMOCK</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 </resources>

@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.txwu.personalbest.fitness.MainScreen;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -44,7 +46,7 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final Goal goal = new Goal(getActivity(), new Date());
+        final Goal goal = new Goal(getActivity(), new Date(System.currentTimeMillis() + MainScreen.timedif));
 
         // gets goal using Goal class
         int currentGoal = goal.getGoal();
@@ -56,7 +58,8 @@ public class EnterNewGoalDialogFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_change_goal, null);
 
-        final String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(new Date());
+        final String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                .format(new Date(System.currentTimeMillis() + MainScreen.timedif));
 
         builder.setTitle(R.string.dialog_choose_goal)
                 .setView(dialogView)
