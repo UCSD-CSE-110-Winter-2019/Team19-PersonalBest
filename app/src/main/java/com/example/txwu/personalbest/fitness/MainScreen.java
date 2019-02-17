@@ -71,8 +71,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
 
         String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
                 .format(new Date(System.currentTimeMillis() + timedif));
-        SharedPreferences sharedPreferences =getSharedPreferences("PersonalBest", MODE_PRIVATE);
-        stepsPrev = sharedPreferences.getInt(date + "stepsPrev", 0);
 
         Intent intent = new Intent(this, StepService.class);
         startService(intent);
@@ -176,14 +174,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 textSteps.setText(String.valueOf(steps));
                 String date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
                         .format(new Date(System.currentTimeMillis() + timedif));
-
-                if (steps >= stepsPrev + stepsSubgoal) {
-                    SharedPreferences sharedPreferences =
-                            getSharedPreferences("PersonalBest", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt(date + "stepsPrev", (int) steps);
-                    editor.apply();
-                }
 
                 SharedPreferences sharedPreferences = getSharedPreferences("Steps", MODE_PRIVATE);
                 SharedPreferences.Editor editor2 = sharedPreferences.edit();
