@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".fitness.MainScreen"></activity>
+        <activity android:name=".fitness.MainScreen" />
         <activity android:name=".InitActivity" />
         <activity
             android:name=".WalkActivity"
@@ -33,6 +33,10 @@
         <service
             android:name=".StepService"
             android:exported="false" />
+
+        <activity
+            android:name=".ChartActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
