@@ -78,7 +78,7 @@ public class Goal {
 
             // yesterday's step
             int stepYesterday = sharedPreferences3.getInt(previousDate, -1);
-            if (stepYesterday > goalYesterday) {
+            if (stepYesterday >= goalYesterday) {
                 Toast.makeText(activity, "Congratulations for meeting your goal of "
                         + String.valueOf(goalYesterday) + " steps yesterday!", Toast.LENGTH_SHORT).show();
             }
