@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.team19.personalbest.Cloud;
 import com.example.team19.personalbest.StepService;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -141,6 +142,7 @@ public class GoogleFitAdapter{
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putInt(date, total);
                                 editor.apply();
+                                Cloud.set("PersonalBest", date, total);
                             }
                         })
                 .addOnFailureListener(

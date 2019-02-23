@@ -194,6 +194,7 @@ public class WalkActivity extends AppCompatActivity implements Observer {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(dateString, steps);
         editor.apply();
+        Cloud.set("Intentional", dateString, prevSteps);
     }
 
     /**

@@ -151,6 +151,7 @@ public class Goal {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("default_goal", newGoal);
         editor.apply();
+        Cloud.set("Goal", "default_goal", newGoal);
     }
 
     /**
