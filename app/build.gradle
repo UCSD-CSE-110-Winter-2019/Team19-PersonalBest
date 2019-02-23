@@ -7,7 +7,7 @@ repositories {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.txwu.personalbest"
+        applicationId "com.example.team19.personalbest"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -47,4 +47,12 @@ dependencies {
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'junit:junit:4.12'
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-database:16.0.6'
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 }
+
+apply plugin: 'com.google.gms.google-services'
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
