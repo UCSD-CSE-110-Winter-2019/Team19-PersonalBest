@@ -1,3 +1,40 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- === MAIN STYLE === -->
+    <!--<dimen name="text_steps_size">70sp</dimen>
+    <dimen name="text_steps_margin_top">70sp</dimen>
+
+    <dimen name="btn_changeGoal_margin_start">100dp</dimen>
+    <dimen name="btn_changeGoal_margin_top">8dp</dimen>
+    <dimen name="btn_changeGoal_text_size">40sp</dimen>
+
+    <dimen name="text_goal_margin_start">8dp</dimen>
+    <dimen name="text_goal_margin_top">8dp</dimen>
+    <dimen name="text_goal_size">40sp</dimen>
+
+    <dimen name="btn_startWalk_margin_top">100dp</dimen>
+    <dimen name="btn_startWalk_text_size">35sp</dimen>
+    <dimen name="btn_startWalk_width">150dp</dimen>
+    <dimen name="btn_startWalk_height">150dp</dimen>
+    -->
+    <!-- === MAIN STYLE === -->
+
+    <!-- === COMPACT STYLE === -->
+    <dimen name="text_steps_size">20sp</dimen>
+    <dimen name="text_steps_margin_top">5sp</dimen>
+
+    <dimen name="btn_changeGoal_margin_start">130dp</dimen>
+    <dimen name="btn_changeGoal_margin_top">8dp</dimen>
+    <dimen name="btn_changeGoal_text_size">15sp</dimen>
+
+    <dimen name="text_goal_margin_start">0dp</dimen>
+    <dimen name="text_goal_margin_top">22dp</dimen>
+    <dimen name="text_goal_size">15sp</dimen>
+
+    <dimen name="btn_startWalk_margin_top">5dp</dimen>
+    <dimen name="btn_startWalk_text_size">12sp</dimen>
+    <dimen name="btn_startWalk_width">100dp</dimen>
+    <dimen name="btn_startWalk_height">100dp</dimen>
+    <!-- === COMPACT STYLE === -->
 </resources>

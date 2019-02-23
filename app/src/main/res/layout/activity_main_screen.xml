@@ -18,9 +18,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="@dimen/text_steps_margin_top"
             android:text="@string/main_step_default"
-            android:textSize="70sp"
+            android:textSize="@dimen/text_steps_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -35,13 +35,13 @@
                 android:id="@+id/button_change_goal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/btn_changeGoal_margin_start"
+                android:layout_marginTop="@dimen/btn_changeGoal_margin_top"
                 android:background="@android:color/transparent"
                 android:onClick="enterNewGoal"
                 android:text="@string/goal_button"
                 android:textColor="#999999"
-                android:textSize="40sp"
+                android:textSize="@dimen/btn_changeGoal_text_size"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,10 +49,10 @@
                 android:id="@+id/text_goal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/text_goal_margin_start"
+                android:layout_marginTop="@dimen/text_goal_margin_top"
                 android:text="@string/default_goal"
-                android:textSize="40sp"
+                android:textSize="@dimen/text_goal_size"
                 app:layout_constraintStart_toEndOf="@id/button_change_goal"
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
@@ -60,14 +60,14 @@
 
         <Button
             android:id="@+id/button_start_walk"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="@dimen/btn_startWalk_width"
+            android:layout_height="@dimen/btn_startWalk_height"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="@dimen/btn_startWalk_margin_top"
             android:background="@drawable/button_bg_round"
             android:text="@string/start_walk_button"
             android:textColor="#333399"
-            android:textSize="35sp" />
+            android:textSize="@dimen/btn_startWalk_text_size" />
         <Button
             android:id="@+id/button_update"
             android:layout_width="wrap_content"
