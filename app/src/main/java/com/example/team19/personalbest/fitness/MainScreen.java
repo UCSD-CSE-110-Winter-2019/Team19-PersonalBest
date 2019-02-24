@@ -189,7 +189,10 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 SharedPreferences.Editor editor2 = sharedPreferences.edit();
                 editor2.putInt(date, steps);
                 editor2.apply();
-                Cloud.set("Steps", date, steps);
+                if (stepsPrev != steps) {
+                    Cloud.set("Steps", date, steps);
+                    stepsPrev = steps;
+                }
             }
         });
 

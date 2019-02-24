@@ -11,6 +11,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -31,31 +32,28 @@ public class Auth {
         mActivity = activity;
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(activity.getString(R.string.web_client_id))
+                .requestIdToken(mActivity.getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
     }
 
     public void signIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mActivity);
 
-        /*if (account != null) {
-            Log.d(TAG, "Account is not null");
-            handleFirebaseLogIn(account);
-        } else {
-            Log.d(TAG, "Account is null");*/
-            /*mGoogleSignInClient.signOut()
-                .addOnCompleteListener(mActivity, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {*/
-                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        mActivity.startActivityForResult(signInIntent, RC_GET_TOKEN);
-                    /*}
-                });*/
-        //}
+        if (account != null) {
+            String idToken = account.getIdToken();
+            Log.d(TAG, "User is already logged in. Account is not null. IdToken: " + idToken);
+            if (idToken != null) {
+                handleFirebaseLogIn(account);
+                return;
+            }
+        }
+
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        mActivity.startActivityForResult(signInIntent, RC_GET_TOKEN);
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
@@ -73,17 +71,17 @@ public class Auth {
         } catch (ApiException e) {
             int statusCode = e.getStatusCode();
             Log.w(TAG, "handleSignInResult:error=" + e.getStatusCode());
-
             if (statusCode == GoogleSignInStatusCodes.SIGN_IN_CURRENTLY_IN_PROGRESS) {
                 Log.w(TAG, "ERROR: A sign in process is currently in progress and the current one cannot continue. e.g. the user clicks the SignInButton multiple times and more than one sign in intent was launched.");
             }
-            else if (statusCode == INTERNAL_ERROR) {
-                Log.w(TAG, "Google Internal error");
+            else if (statusCode == CommonStatusCodes.INTERNAL_ERROR) {
+                Log.w(TAG, "ERROR: An internal error occurred. Retrying should resolve the problem.");
             }
 
              mGoogleSignInClient.signOut().addOnCompleteListener(mActivity, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
+                    Log.d(TAG, "Retrying sign in...");
                     signIn();
                 }
             });

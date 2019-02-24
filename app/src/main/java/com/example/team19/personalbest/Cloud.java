@@ -1,7 +1,10 @@
 package com.example.team19.personalbest;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,12 +65,23 @@ public class Cloud {
             }
         });
     }
-
-    public static void set(String namespace, String key, Object value) {
+    public static void set(final String namespace, final String key, final Object value) {
         if (!isUserReady()) return;
 
         DatabaseReference mDb = FirebaseDatabase.getInstance().getReference();
         DatabaseReference myRef = mDb.child(USERS).child(mUser.getUid()).child(namespace).child(key);
-        myRef.setValue(value);
+        myRef.setValue(value)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Write value successful for " + namespace + "/" + key);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Failed to write value.", e);
+                    }
+                });
     }
 }

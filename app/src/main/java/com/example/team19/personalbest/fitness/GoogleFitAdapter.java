@@ -32,6 +32,7 @@ public class GoogleFitAdapter{
     private final String TAG = "GoogleFitAdapter";
     private StepService service;
     private GoogleSignInAccount lastSignedInAccount;
+    private int lastStep = 0;
 
     public GoogleFitAdapter(StepService service) {
         this.service = service;
@@ -142,7 +143,10 @@ public class GoogleFitAdapter{
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putInt(date, total);
                                 editor.apply();
-                                Cloud.set("PersonalBest", date, total);
+                                if (lastStep != total) {
+                                    Cloud.set("PersonalBest", date, total);
+                                    lastStep = total;
+                                }
                             }
                         })
                 .addOnFailureListener(
