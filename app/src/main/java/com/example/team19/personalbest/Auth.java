@@ -25,20 +25,35 @@ public class Auth {
     private static final String TAG = "AUTH";
     private MainScreen mActivity;
     private GoogleSignInClient mGoogleSignInClient;
+    private boolean isEmailPhase = true;
 
     public Auth(MainScreen activity) {
         mActivity = activity;
 
+        mGoogleSignInClient = getTokenClient();
+    }
+
+    private GoogleSignInClient getEmailClient() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        return GoogleSignIn.getClient(mActivity, gso);
+    }
+
+    private GoogleSignInClient getTokenClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(mActivity.getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
+        return GoogleSignIn.getClient(mActivity, gso);
     }
 
     public void signIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mActivity);
+
+        Log.d(TAG, "Account: " + account);
 
         if (account != null) {
             String idToken = account.getIdToken();
@@ -49,8 +64,23 @@ public class Auth {
             }
         }
 
+        //if (isEmailPhase) {
+        //            startSignIn(getEmailClient());
+        //} else {
+            mGoogleSignInClient.signOut().addOnCompleteListener(mActivity, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    startSignIn(getTokenClient());
+                }
+            });
+        //}
+        //isEmailPhase = !isEmailPhase;
+    }
+
+    private void startSignIn(GoogleSignInClient client) {
+        mGoogleSignInClient = client;
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        //signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         mActivity.startActivityForResult(signInIntent, RC_GET_TOKEN);
     }
 
@@ -90,6 +120,11 @@ public class Auth {
         String idToken = account.getIdToken();
         Log.d(TAG, "Email: " + account.getEmail());
         Log.d(TAG, "idToken: " + idToken);
+
+        if (idToken == null) {
+            signIn();
+            return;
+        }
 
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);

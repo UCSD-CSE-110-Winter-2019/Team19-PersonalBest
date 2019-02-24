@@ -5,11 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.team19.personalbest.fitness.MainScreen;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.DataType;
 
@@ -80,7 +82,10 @@ public class MainActivity extends AppCompatActivity{
                 .addDataType(DataType.AGGREGATE_SPEED_SUMMARY, FitnessOptions.ACCESS_READ)
                 .build();
 
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        Log.d("MainActivity", "MainActivity requestSignInAndPermission Account: " + account);
+
+        if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
             GoogleSignIn.requestPermissions(
                     this, // your activity
                     System.identityHashCode(this) & 0xFFFF,
