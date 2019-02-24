@@ -43,8 +43,12 @@ public class Cloud {
     }
 
     public static void getAll(String namespace, final CloudStorageCallback cc) {
-        if (!isUserReady()) return;
+        if (!isUserReady()) {
+            Log.d(TAG, "User is not ready");
+            return;
+        }
 
+        Log.d(TAG, "User is ready");
         DatabaseReference mDb = FirebaseDatabase.getInstance().getReference();
         DatabaseReference myRef = mDb.child(USERS).child(mUser.getUid()).child(namespace);
 
@@ -52,10 +56,11 @@ public class Cloud {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    String value = childSnapshot.getValue(String.class);
+                    // entering data manually -> long, while commands -> string
+                    String value = childSnapshot.getValue(Long.class).toString();
                     String key = childSnapshot.getKey();
                     cc.onData(key, value);
-                    Log.d(TAG, "Value is: " + value);
+                    Log.d(TAG, "Value is: " + value + " | Key is: " + key);
                 }
             }
 

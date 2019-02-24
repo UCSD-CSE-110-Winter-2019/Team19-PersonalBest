@@ -107,15 +107,16 @@ public class InitActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (state == 0) {
                     prefs.edit().putBoolean("accepted_terms_and_privacy", true).apply();
+                    Cloud.set("Personal Info", "accepted_terms_and_privacy", true);
                     nextState();
                 } else {
                     long height = Long.parseLong(heightInput.getText().toString());
                     prefs.edit().putLong("user_height", height).apply();
-                    Cloud.set("Personal Info", "Height", height);
+                    Cloud.set("Personal Info", "user_height", height);
 
                     String unit = lengthSpinner.getSelectedItem().toString();
                     prefs.edit().putString("user_measurement_unit", unit).apply();
-                    Cloud.set("Personal Info", "Measurement Unit", unit);
+                    Cloud.set("Personal Info", "user_measurement_unit", unit);
 
                     endActivity();
                 }
