@@ -41,7 +41,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
     private int stepsSubgoal = 500;
     private int mockStep;
     public static long timedif = 0;
-    private Auth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,16 +148,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
             }
         });
         checkForEncouragement();
-
-        mAuth = new Auth(this);
-        mAuth.signIn();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        mAuth.handleActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -173,7 +162,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
         DialogFragment enterNewGoalDialogFragment = new EnterNewGoalDialogFragment();
         enterNewGoalDialogFragment.show(getSupportFragmentManager(), "new goal");
     }
-
 
     @Override
     public void update(Observable o, Object arg) {

@@ -14,11 +14,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.DataType;
 
-public class MainActivity extends AppCompatActivity{
-
-
+public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs = null;
     private static final String TAG = "MainActivity";
+    private Auth mAuth;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            handleMainInit();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,20 @@ public class MainActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mAuth = new Auth(this);
+        mAuth.signIn(runnable);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(Auth.TAG, "onActivityResult");
+
+        mAuth.handleActivityResult(requestCode, resultCode, data, runnable);
+    }
+
+    public void handleMainInit() {
         prefs = getSharedPreferences("com.exmaple.txwu.personalbest", MODE_PRIVATE);
         Intent i;
         if (!prefs.getBoolean("accepted_terms_and_privacy", false) || prefs.getLong("user_height", 0) == 0) {
@@ -45,8 +64,8 @@ public class MainActivity extends AppCompatActivity{
         startActivity(i);
         requestSignInAndPermission();
         finish();
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,11 +109,4 @@ public class MainActivity extends AppCompatActivity{
                     fitnessOptions);
         }
     }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent){
-        Log.d(TAG, "onActivityResult for mainactivity called");
-        Log.d(TAG, "requestCode: " + requestCode);
-        Log.d(TAG, "resultCode: " + resultCode);
-    }
-
 }

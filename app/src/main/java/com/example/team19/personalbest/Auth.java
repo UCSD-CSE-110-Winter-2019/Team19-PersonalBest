@@ -1,5 +1,6 @@
 package com.example.team19.personalbest;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -24,11 +25,11 @@ import static com.google.android.gms.common.ConnectionResult.INTERNAL_ERROR;
 
 public class Auth {
     private static final int RC_GET_TOKEN = 9002;
-    private static final String TAG = "AUTH";
-    private MainScreen mActivity;
+    public static final String TAG = "AUTH";
+    private Activity mActivity;
     private GoogleSignInClient mGoogleSignInClient;
 
-    public Auth(MainScreen activity) {
+    public Auth(Activity activity) {
         mActivity = activity;
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -39,14 +40,14 @@ public class Auth {
         mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
     }
 
-    public void signIn() {
+    public void signIn(Runnable runnable) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mActivity);
 
         if (account != null) {
             String idToken = account.getIdToken();
             Log.d(TAG, "User is already logged in. Account is not null. IdToken: " + idToken);
             if (idToken != null) {
-                handleFirebaseLogIn(account);
+                handleFirebaseLogIn(account, runnable);
                 return;
             }
         }
@@ -56,18 +57,18 @@ public class Auth {
         mActivity.startActivityForResult(signInIntent, RC_GET_TOKEN);
     }
 
-    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+    public void handleActivityResult(int requestCode, int resultCode, Intent data, Runnable runnable) {
         if (requestCode == RC_GET_TOKEN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            handleSignInResult(task, runnable);
         }
     }
 
-    public void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
+    public void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask, final Runnable runnable) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            handleFirebaseLogIn(account);
+            handleFirebaseLogIn(account, runnable);
         } catch (ApiException e) {
             int statusCode = e.getStatusCode();
             Log.w(TAG, "handleSignInResult:error=" + e.getStatusCode());
@@ -82,13 +83,13 @@ public class Auth {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     Log.d(TAG, "Retrying sign in...");
-                    signIn();
+                    signIn(runnable);
                 }
             });
         }
     }
 
-    private void handleFirebaseLogIn(GoogleSignInAccount account) {
+    private void handleFirebaseLogIn(final GoogleSignInAccount account, final Runnable runnable) {
         String idToken = account.getIdToken();
         Log.d(TAG, "Email: " + account.getEmail());
         Log.d(TAG, "idToken: " + idToken);
@@ -107,6 +108,10 @@ public class Auth {
                             Cloud.mUser = user;
                             CloudToLocalStorageMigration c2lsM = new CloudToLocalStorageMigration(mActivity);
                             c2lsM.MigrateData();
+
+                            Cloud.set("", "Email", account.getEmail());
+
+                            runnable.run();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

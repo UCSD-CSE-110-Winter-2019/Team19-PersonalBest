@@ -65,8 +65,12 @@ public class CloudToLocalStorageMigration {
                 //SimpleDateFormat date = new SimpleDateFormat(s);
                 SharedPreferences sharedPreferences = activity.getSharedPreferences("Goal", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("default_goal", Integer.parseInt(s));
-                editor.apply();
+                try {
+                    editor.putInt("default_goal", Integer.parseInt(s));
+                    editor.apply();
+                } catch (NumberFormatException e) {
+                    Log.d(TAG, "Number format exception");
+                }
             }
         });
     }
