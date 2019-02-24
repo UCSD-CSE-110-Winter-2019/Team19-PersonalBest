@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.team19.personalbest.fitness.HistoryClient;
+import com.google.firebase.database.DataSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,10 +21,42 @@ public class CloudToLocalStorageMigration {
         this.activity = activity;
     }
 
-    public void MigrateData(){
+    public void MigrateData(Runnable runnable) {
         MigrateSteps();
         MigrateIntentional();
         MigrateGoal();
+        MigratePersonInfo(runnable);
+    }
+
+    public void MigratePersonInfo(final Runnable runnable) {
+        Log.d(TAG, "Migrating Personal Info");
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(InitActivity.PACKAGE_NAME, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        // FIXME(phil): callback hell
+        Cloud.get("Personal Info", "accepted_terms_and_privacy", new CloudCallback() {
+            @Override
+            public void onData(DataSnapshot d) {
+                Boolean b = d.getValue(Boolean.class);
+                editor.putBoolean("accepted_terms_and_privacy", b);
+                editor.apply();
+                Cloud.get("Personal Info", "user_height", new CloudCallback() {
+                    @Override
+                    public void onData(DataSnapshot d) {
+                        long height = d.getValue(Long.class);
+                        editor.putLong("user_height", height);
+                        editor.apply();
+                        Cloud.get("Personal Info", "user_measurement_unit", new CloudCallback() {
+                            @Override
+                            public void onData(DataSnapshot d) {
+                                editor.putString("user_measurement_unit", d.getValue(String.class));
+                                editor.apply();
+                                runnable.run();
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
     public void MigrateSteps(){
@@ -60,17 +93,15 @@ public class CloudToLocalStorageMigration {
         Log.d(TAG, "Migrating Goal");
         Cloud.get("Goal", "default_goal", new CloudCallback() {
             @Override
-            public void onData(String s) {
+            public void onData(DataSnapshot d) {
                 // store in sharedpref
                 //SimpleDateFormat date = new SimpleDateFormat(s);
+                long goal = d.getValue(Long.class);
+                Log.d("AUTH", "" + goal);
                 SharedPreferences sharedPreferences = activity.getSharedPreferences("Goal", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                try {
-                    editor.putInt("default_goal", Integer.parseInt(s));
-                    editor.apply();
-                } catch (NumberFormatException e) {
-                    Log.d(TAG, "Number format exception");
-                }
+                editor.putInt("default_goal", (int) goal);
+                editor.apply();
             }
         });
     }

@@ -30,9 +30,9 @@ public class Cloud {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    String value = dataSnapshot.getValue(String.class);
-                    cc.onData(value);
-                    Log.d(TAG, "Value is: " + value);
+                    if (dataSnapshot.exists()) {
+                        cc.onData(dataSnapshot);
+                    }
             }
 
             @Override

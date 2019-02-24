@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.example.team19.personalbest.fitness.MainScreen;
 
 public class InitActivity extends AppCompatActivity {
-
+    public static final String PACKAGE_NAME = "com.example.team19.personalbest";
     private SharedPreferences prefs = null;
     private Button nextButton;
     private CheckBox termsCheckBox, privacyCheckBox;
@@ -42,7 +42,7 @@ public class InitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
 
-        prefs = getSharedPreferences("com.exmaple.txwu.personalbest", MODE_PRIVATE);
+        prefs = getSharedPreferences(PACKAGE_NAME, MODE_PRIVATE);
 
         // buttons
         termsCheckBox = (CheckBox) findViewById(R.id.termsAndConditionsCheckbox);

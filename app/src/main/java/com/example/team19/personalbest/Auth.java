@@ -105,13 +105,11 @@ public class Auth {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            Cloud.mUser = user;
-                            CloudToLocalStorageMigration c2lsM = new CloudToLocalStorageMigration(mActivity);
-                            c2lsM.MigrateData();
-
                             Cloud.set("", "Email", account.getEmail());
 
-                            runnable.run();
+                            Cloud.mUser = user;
+                            CloudToLocalStorageMigration c2lsM = new CloudToLocalStorageMigration(mActivity);
+                            c2lsM.MigrateData(runnable);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

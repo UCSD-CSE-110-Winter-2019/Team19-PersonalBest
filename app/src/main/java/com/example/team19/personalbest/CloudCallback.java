@@ -1,5 +1,7 @@
 package com.example.team19.personalbest;
 
+import com.google.firebase.database.DataSnapshot;
+
 public interface CloudCallback {
-    void onData(String s);
+    void onData(DataSnapshot d);
 }
