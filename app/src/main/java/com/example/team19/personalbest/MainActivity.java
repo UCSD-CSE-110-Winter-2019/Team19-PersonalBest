@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     private SharedPreferences prefs = null;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,12 @@ public class MainActivity extends AppCompatActivity{
                     GoogleSignIn.getLastSignedInAccount(this),
                     fitnessOptions);
         }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        Log.d(TAG, "onActivityResult for mainactivity called");
+        Log.d(TAG, "requestCode: " + requestCode);
+        Log.d(TAG, "resultCode: " + resultCode);
     }
 
 }

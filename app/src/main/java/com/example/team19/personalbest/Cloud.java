@@ -39,6 +39,30 @@ public class Cloud {
         });
     }
 
+    public static void getAll(String namespace, final CloudStorageCallback cc) {
+        if (!isUserReady()) return;
+
+        DatabaseReference mDb = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference myRef = mDb.child(USERS).child(mUser.getUid()).child(namespace);
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    String value = childSnapshot.getValue(String.class);
+                    String key = childSnapshot.getKey();
+                    cc.onData(key, value);
+                    Log.d(TAG, "Value is: " + value);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
     public static void set(String namespace, String key, Object value) {
         if (!isUserReady()) return;
 

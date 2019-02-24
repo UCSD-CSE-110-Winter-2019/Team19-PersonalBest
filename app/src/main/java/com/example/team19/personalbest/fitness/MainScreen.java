@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.team19.personalbest.Auth;
 import com.example.team19.personalbest.ChartActivity;
+import com.example.team19.personalbest.Cloud;
 import com.example.team19.personalbest.EnterNewGoalDialogFragment;
 import com.example.team19.personalbest.Goal;
 import com.example.team19.personalbest.R;
@@ -188,6 +189,7 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 SharedPreferences.Editor editor2 = sharedPreferences.edit();
                 editor2.putInt(date, steps);
                 editor2.apply();
+                Cloud.set("Steps", date, steps);
             }
         });
 

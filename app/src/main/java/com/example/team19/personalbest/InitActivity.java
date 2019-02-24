@@ -111,9 +111,11 @@ public class InitActivity extends AppCompatActivity {
                 } else {
                     long height = Long.parseLong(heightInput.getText().toString());
                     prefs.edit().putLong("user_height", height).apply();
+                    Cloud.set("Personal Info", "Height", height);
 
                     String unit = lengthSpinner.getSelectedItem().toString();
                     prefs.edit().putString("user_measurement_unit", unit).apply();
+                    Cloud.set("Personal Info", "Measurement Unit", unit);
 
                     endActivity();
                 }
