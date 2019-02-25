@@ -53,7 +53,8 @@ public class Auth {
         }
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        // NOTE(phil): This fixes error code 16 on the emulator but breaks the login on my phone
+        //signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         mActivity.startActivityForResult(signInIntent, RC_GET_TOKEN);
     }
 

@@ -16,6 +16,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class CloudToLocalStorageMigration {
     Activity activity;
     private static final String TAG = "C2LSM";
+    private boolean ran = false;
 
     public CloudToLocalStorageMigration(Activity activity){
         this.activity = activity;
@@ -50,13 +51,27 @@ public class CloudToLocalStorageMigration {
                             public void onData(DataSnapshot d) {
                                 editor.putString("user_measurement_unit", d.getValue(String.class));
                                 editor.apply();
-                                runnable.run();
+                                if (!ran) {
+                                    runnable.run();
+                                    ran = true;
+                                }
                             }
                         });
                     }
                 });
             }
         });
+        // NOTE(phil): If the callbacks do not get called, probably find a better way
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        if (!ran) {
+                            runnable.run();
+                            ran = true;
+                        }
+                    }
+                },
+                5*1000);
     }
 
     public void MigrateSteps(){
