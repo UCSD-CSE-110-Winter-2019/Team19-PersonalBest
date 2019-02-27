@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.team19.personalbest.fitness.MainScreen;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -106,11 +107,11 @@ public class Auth {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            Cloud.set("", "Email", account.getEmail());
-
                             Cloud.mUser = user;
                             CloudToLocalStorageMigration c2lsM = new CloudToLocalStorageMigration(mActivity);
                             c2lsM.MigrateData(runnable);
+
+                            Cloud.set("", "Email", account.getEmail());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
