@@ -76,14 +76,16 @@ public class CloudToLocalStorageMigration {
 
     public void MigrateSteps(){
         Log.d(TAG, "Migrating steps");
-        Cloud.getAll("Steps", new CloudStorageCallback() {
+        Cloud.getAll("Steps", new CloudCallback() {
             @Override
-            public void onData(String s, String t) {
+            public void onData(DataSnapshot childSnapshot) {
                 // store in sharedpref
-                //SimpleDateFormat date = new SimpleDateFormat(s);
+                String value = childSnapshot.getValue(Long.class).toString();
+                String key = childSnapshot.getKey();
+                Log.d(TAG, "Value is: " + value + " | Key is: " + key);
                 SharedPreferences sharedPreferences = activity.getSharedPreferences("Steps", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(s, Integer.parseInt(t));
+                editor.putInt(value, Integer.parseInt(key));
                 editor.apply();
             }
         });
@@ -91,14 +93,17 @@ public class CloudToLocalStorageMigration {
 
     public void MigrateIntentional(){
         Log.d(TAG, "Migrating Intentional");
-        Cloud.getAll("Intentional", new CloudStorageCallback() {
+        Cloud.getAll("Intentional", new CloudCallback() {
             @Override
-            public void onData(String s, String t) {
+            public void onData(DataSnapshot childSnapshot) {
                 // store in sharedpref
-                //SimpleDateFormat date = new SimpleDateFormat(s);
+                // entering data manually -> long, while commands -> string
+                String value = childSnapshot.getValue(Long.class).toString();
+                String key = childSnapshot.getKey();
+                Log.d(TAG, "Value is: " + value + " | Key is: " + key);
                 SharedPreferences sharedPreferences = activity.getSharedPreferences("Intentional", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(s, Integer.parseInt(t));
+                editor.putInt(value, Integer.parseInt(key));
                 editor.apply();
             }
         });

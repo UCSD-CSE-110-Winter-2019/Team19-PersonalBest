@@ -42,7 +42,7 @@ public class Cloud {
         });
     }
 
-    public static void getAll(String namespace, final CloudStorageCallback cc) {
+    public static void getAll(String namespace, final CloudCallback cc) {
         if (!isUserReady()) {
             Log.d(TAG, "User is not ready");
             return;
@@ -56,11 +56,7 @@ public class Cloud {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    // entering data manually -> long, while commands -> string
-                    String value = childSnapshot.getValue(Long.class).toString();
-                    String key = childSnapshot.getKey();
-                    cc.onData(key, value);
-                    Log.d(TAG, "Value is: " + value + " | Key is: " + key);
+                    cc.onData(childSnapshot);
                 }
             }
 
