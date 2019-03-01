@@ -75,16 +75,18 @@ public class Goal {
 
             // yesterday's step
             int stepYesterday = sharedPreferences3.getInt(previousDate, -1);
-            if (stepYesterday >= goalYesterday) {
-                Toast.makeText(activity, "Congratulations for meeting your goal of "
-                        + String.valueOf(goalYesterday) + " steps yesterday!", Toast.LENGTH_SHORT).show();
+            if (goalYesterday != -1) {
+                if (stepYesterday >= goalYesterday) {
+                    Toast.makeText(activity, "Congratulations for meeting your goal of "
+                            + String.valueOf(goalYesterday) + " steps yesterday!", Toast.LENGTH_SHORT).show();
+                }
+                else if (stepYesterday >= (0.8 * goalYesterday)) {
+                    if (!sharedPreferences2.getBoolean(previousDate + "subgoal", false))
+                    Toast.makeText(activity, "You accomplished over 80% of your goal yesterday, keep up the good work!",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
-            else if (stepYesterday >= (0.8 * goalYesterday)) {
-                if (!sharedPreferences2.getBoolean(previousDate + "subgoal", false))
-                Toast.makeText(activity, "You accomplished over 80% of your goal yesterday, keep up the good work!",
-                        Toast.LENGTH_SHORT).show();
-            }
-
+            
             editor.putBoolean(previousDate+"goal", true);
             editor.apply();
         }
