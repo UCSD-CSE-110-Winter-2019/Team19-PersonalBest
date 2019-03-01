@@ -39,10 +39,12 @@ public class ChartActivity extends AppCompatActivity {
 
     private void updateChart() {
 
-        int[] goals = history.getGoalsForWeek();
+        // get the data from history client
+        int[] goals = history.getGoals();
         int[] intentionals = history.getIntentional();
         int[] incidentals = history.getIncidentals();
 
+        // enter the data into the bar chart
         entriesGoal = new ArrayList<>();
         entriesStep = new ArrayList<>();
 
@@ -55,6 +57,7 @@ public class ChartActivity extends AppCompatActivity {
         BarDataSet stepSet = new BarDataSet(entriesStep, "Steps");
         stepSet.setStackLabels(new String[] {"Incidental", "Intentional"});
 
+        // Configure the bar chart
         goalSet.setColor(Color.RED);
         stepSet.setColors(Color.BLUE, Color.GREEN);
 
@@ -65,7 +68,7 @@ public class ChartActivity extends AppCompatActivity {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 long millis = history.getFirstDayTimeMillis();
-                millis += (int)value * history.millisADay;
+                millis += (int)value * history.MILLIS_A_DAY;
                 return new SimpleDateFormat("MM-dd", Locale.US).format(new Date(millis));
             }
 

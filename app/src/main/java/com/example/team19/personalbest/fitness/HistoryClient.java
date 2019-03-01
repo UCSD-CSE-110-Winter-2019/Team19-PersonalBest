@@ -9,47 +9,47 @@ import java.util.Date;
 import java.util.Locale;
 
 public class HistoryClient {
-    public static final long millisADay = 86400000;
+    public static final long MILLIS_A_DAY = 86400000;
 
     private long currentTimeMillis;
     private Activity activity;
-    private Date[] dateOfWeek;
+    private Date[] dateOfMonth;
     public HistoryClient(long timeMillis, Activity activity) {
         currentTimeMillis = timeMillis;
         this.activity = activity;
         // initialize dates for the week
-        dateOfWeek = new Date[7];
+        dateOfMonth = new Date[28];
 
         long timeDif = 0;
-        for (int i = 6; i >=0 ; i--) {
-            dateOfWeek[i] = new Date(currentTimeMillis - timeDif);
-            timeDif += millisADay;
+        for (int i = 27; i >=0 ; i--) {
+            dateOfMonth[i] = new Date(currentTimeMillis - timeDif);
+            timeDif += MILLIS_A_DAY;
         }
     }
 
     /**
-     * Get the formatted date strings of the current week
+     * Get the formatted date strings of the most recent 28 days
      * @return - array of formatted date strings
      */
     public String[] getDateFormat() {
-        String[] dateFormat = new String[dateOfWeek.length];
-        for (int i = 0; i < dateOfWeek.length; i++) {
-            dateFormat[i] = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(dateOfWeek[i]);
+        String[] dateFormat = new String[dateOfMonth.length];
+        for (int i = 0; i < dateOfMonth.length; i++) {
+            dateFormat[i] = new SimpleDateFormat("dd-MM-yyyy", Locale.US).format(dateOfMonth[i]);
         }
 
         return dateFormat;
     }
 
     /**
-     * Get the steps for the current week
-     * @return - array of steps for current week
+     * Get the steps for the most recent 28 days
+     * @return - array of steps for most recent 28 days
      */
-    public int[] getStepsForWeek() {
+    public int[] getSteps() {
 
         SharedPreferences stepHistory = activity.getSharedPreferences("Steps", Context.MODE_PRIVATE);
         String[] dates = getDateFormat();
-        int[] steps = new int[dateOfWeek.length];
-        for (int i = 0; i < dateOfWeek.length; i++) {
+        int[] steps = new int[dateOfMonth.length];
+        for (int i = 0; i < dateOfMonth.length; i++) {
             steps[i] = stepHistory.getInt(dates[i], 0);
         }
 
@@ -57,44 +57,44 @@ public class HistoryClient {
     }
 
     /**
-     * Get the goals for the current week
-     * @return - array of goals for current week
+     * Get the goals for the most recent 28 days
+     * @return - array of goals for most recent 28 days
      */
-    public int[] getGoalsForWeek() {
+    public int[] getGoals() {
 
         SharedPreferences goalHistory = activity.getSharedPreferences("Goal", Context.MODE_PRIVATE);
         String[] dates = getDateFormat();
-        int[] goals = new int[dateOfWeek.length];
-        for (int i = 0; i < dateOfWeek.length; i++) {
+        int[] goals = new int[dateOfMonth.length];
+        for (int i = 0; i < dateOfMonth.length; i++) {
             goals[i] = goalHistory.getInt(dates[i], 0);
         }
         return goals;
     }
 
     /**
-     * Get the intentional walks of current week
+     * Get the intentional walks of most recent 28 days
      * @return - array of intentional walks for each day
      */
     public int[] getIntentional() {
 
         SharedPreferences intentionalHistory = activity.getSharedPreferences("Intentional", Context.MODE_PRIVATE);
         String[] dates = getDateFormat();
-        int[] intentionals = new int[dateOfWeek.length];
-        for (int i = 0; i < dateOfWeek.length; i++) {
+        int[] intentionals = new int[dateOfMonth.length];
+        for (int i = 0; i < dateOfMonth.length; i++) {
             intentionals[i] = intentionalHistory.getInt(dates[i], 0);
         }
         return intentionals;
     }
 
     /**
-     * Get incidental walks for the current week, this is the difference of step and intentional
-     * @return - array of incidental walks of the week
+     * Get incidental walks for the most recent 28 days, this is the difference of step and intentional
+     * @return - array of incidental walks of the most recent 28 days
      */
     public int[] getIncidentals() {
         int[] intentionals = getIntentional();
-        int[] steps = getStepsForWeek();
-        int[] incidentals = new int[dateOfWeek.length];
-        for (int i = 0; i < dateOfWeek.length; i++) {
+        int[] steps = getSteps();
+        int[] incidentals = new int[dateOfMonth.length];
+        for (int i = 0; i < dateOfMonth.length; i++) {
             incidentals[i] = steps[i] - intentionals[i];
         }
         return incidentals;
@@ -105,6 +105,6 @@ public class HistoryClient {
      * @return - time millis for first day
      */
     public long getFirstDayTimeMillis() {
-        return currentTimeMillis - 6 * millisADay;
+        return currentTimeMillis - 27 * MILLIS_A_DAY;
     }
 }

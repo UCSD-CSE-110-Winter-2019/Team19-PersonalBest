@@ -36,7 +36,7 @@ public class ChartActivityTest {
         BarDataSet goalSet = (BarDataSet) chart.getData().getDataSetByLabel("Goal", false);
         BarDataSet stepSet = (BarDataSet) chart.getData().getDataSetByLabel("Steps", false);
 
-        int[] goals = history.getGoalsForWeek();
+        int[] goals = history.getGoals();
         int[] incidental = history.getIncidentals();
         int[] intentional = history.getIntentional();
 
@@ -64,7 +64,7 @@ class MockHistory extends HistoryClient {
     }
 
     @Override
-    public int[] getGoalsForWeek() {
+    public int[] getGoals() {
 
         return new int[]{5000, 5000, 6000, 6500, 6500, 7000, 9000};
     }
