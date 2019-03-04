@@ -81,7 +81,7 @@ public class ChartActivity extends AppCompatActivity {
         xAxis.setValueFormatter(formatter);
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(7);
+        xAxis.setAxisMaximum(28);
 
         BarData data = new BarData(stepSet, goalSet);
         data.setBarWidth(0.45f);

@@ -85,7 +85,7 @@ public class CloudToLocalStorageMigration {
                 Log.d(TAG, "Value is: " + value + " | Key is: " + key);
                 SharedPreferences sharedPreferences = activity.getSharedPreferences("Steps", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(value, Integer.parseInt(key));
+                editor.putInt(key, Integer.parseInt(value));
                 editor.apply();
             }
         });
@@ -103,7 +103,7 @@ public class CloudToLocalStorageMigration {
                 Log.d(TAG, "Value is: " + value + " | Key is: " + key);
                 SharedPreferences sharedPreferences = activity.getSharedPreferences("Intentional", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(value, Integer.parseInt(key));
+                editor.putInt(key, Integer.parseInt(value));
                 editor.apply();
             }
         });
