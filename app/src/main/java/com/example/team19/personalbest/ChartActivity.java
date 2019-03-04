@@ -83,6 +83,10 @@ public class ChartActivity extends AppCompatActivity {
         xAxis.setAxisMinimum(0);
         xAxis.setAxisMaximum(28);
 
+        chart.setVisibleXRangeMaximum(7);
+        chart.setVisibleXRangeMinimum(7);
+        chart.moveViewToX(22);
+
         BarData data = new BarData(stepSet, goalSet);
         data.setBarWidth(0.45f);
         // data.setValueFormatter(new MyValueFormatter);
