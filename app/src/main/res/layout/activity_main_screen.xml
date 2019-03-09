@@ -63,7 +63,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/button_bg_round"
             android:text="@string/start_walk_button"
             android:textColor="#333399"
@@ -83,6 +83,14 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="@string/stats" />
+
+        <Button
+            android:id="@+id/button_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Friends" />
 
 
         <android.support.constraint.ConstraintLayout

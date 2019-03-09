@@ -17,6 +17,7 @@ import com.example.team19.personalbest.ChartActivity;
 import com.example.team19.personalbest.Cloud;
 import com.example.team19.personalbest.CloudToLocalStorageMigration;
 import com.example.team19.personalbest.EnterNewGoalDialogFragment;
+import com.example.team19.personalbest.FriendActivity;
 import com.example.team19.personalbest.Goal;
 import com.example.team19.personalbest.R;
 import com.example.team19.personalbest.StepService;
@@ -90,6 +91,15 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
             @Override
             public void onClick(View v) {
                 checkForEncouragement();
+            }
+        });
+
+        Button friends = findViewById(R.id.button_friends);
+        friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainScreen.this, FriendActivity.class);
+                startActivity(intent);
             }
         });
 
