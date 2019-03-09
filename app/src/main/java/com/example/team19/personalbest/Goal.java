@@ -2,11 +2,18 @@ package com.example.team19.personalbest;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.team19.personalbest.fitness.MainScreen;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -51,6 +58,37 @@ public class Goal {
                     editor.putBoolean(date + "subgoal", true);
                     editor.apply();
                 }
+            }
+        }
+
+        prepareProgressCheck();
+    }
+
+    private void prepareProgressCheck() {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("Steps", MODE_PRIVATE);
+        String previousDate = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                .format(new Date(System.currentTimeMillis() + MainScreen.timedif - 24*60*60*1000));
+        final int stepYesterday = sharedPreferences.getInt(previousDate, -1);
+
+        DatabaseReference friendDB = FirebaseDatabase.getInstance().getReference().child("friends");
+        friendDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(Cloud.mUser.getUid())) {
+                    checkProgress(stepYesterday, true);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void checkProgress(int stepYesterday, boolean nofriend) {
+        if (nofriend) {
+            if (stepYesterday > 0 && steps > stepYesterday * 1.8) {
+                Toast.makeText(activity, "You have doubled you steps compared to yesterday\n" +
+                        "Keep up the good work!", Toast.LENGTH_SHORT).show();
             }
         }
     }

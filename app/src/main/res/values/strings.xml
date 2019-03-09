@@ -24,4 +24,10 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="web_client_id">671046782201-jbe125126at9dluepdffn7fvstffl6ck.apps.googleusercontent.com</string>
+    <string name="users">Users</string>
+    <string name="menu_friends">Friends</string>
+    <string name="send_friend_request">Send Friend Request</string>
+    <string name="decline_btn_text">DECLINE FRIEND REQUEST</string>
+    <string name="cancel_friend_request">Cancel Request</string>
+    <string name="accept_friend_request">Accept Request</string>
 </resources>
