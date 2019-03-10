@@ -14,6 +14,9 @@ public class HistoryClient {
     private long currentTimeMillis;
     private Activity activity;
     private Date[] dateOfMonth;
+
+    public HistoryClient() {}
+
     public HistoryClient(long timeMillis, Activity activity) {
         currentTimeMillis = timeMillis;
         this.activity = activity;
