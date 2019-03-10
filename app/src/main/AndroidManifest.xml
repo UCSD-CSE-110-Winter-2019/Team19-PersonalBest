@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".FriendHistoryActivity"></activity>
+        <activity android:name=".ProfileActivity" />
         <activity
             android:name=".FriendsActivity"
             android:parentActivityName=".fitness.MainScreen" />

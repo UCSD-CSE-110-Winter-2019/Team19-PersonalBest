@@ -30,4 +30,5 @@
     <string name="decline_btn_text">DECLINE FRIEND REQUEST</string>
     <string name="cancel_friend_request">Cancel Request</string>
     <string name="accept_friend_request">Accept Request</string>
+    <string name="view_friend_history">VIEW HISTORY</string>
 </resources>

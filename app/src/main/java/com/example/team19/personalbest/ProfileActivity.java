@@ -1,5 +1,6 @@
 package com.example.team19.personalbest;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected String user_id;
     protected DatabaseReference mFriendRequestDB;
     protected DatabaseReference mFriendDB;
+    protected Button view_history_btn;
 
     protected State current_state;
 
@@ -40,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        view_history_btn = findViewById(R.id.friend_history_btn);
         user_id = getIntent().getStringExtra("user_id");
         user = ( Users) getIntent().getSerializableExtra("User");
 
@@ -75,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
                             if (dataSnapshot.hasChild(user_id)) {
                                 current_state = State.FRIEND;
                                 sendRequestButton.setEnabled(false);
+                                view_history_btn.setVisibility(View.VISIBLE);
                             }
                         }
 
@@ -110,6 +114,13 @@ public class ProfileActivity extends AppCompatActivity {
                 else if (current_state == State.REQUEST_RECEIVED) {
                     acceptRequest();
                 }
+            }
+        });
+
+        view_history_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHistory();
             }
         });
     }
@@ -208,4 +219,9 @@ public class ProfileActivity extends AppCompatActivity {
         REQUEST_RECEIVED
     }
 
+    private void viewHistory() {
+        Intent intent = new Intent(this, FriendHistoryActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
 }
