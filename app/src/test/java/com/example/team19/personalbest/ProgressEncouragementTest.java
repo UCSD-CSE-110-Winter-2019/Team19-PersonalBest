@@ -47,7 +47,7 @@ public class ProgressEncouragementTest {
         testGoal.checkProgress(9999,true);
         latestToast = ShadowToast.getTextOfLatestToast();
         assertNotNull(latestToast);
-        assertEquals("You have doubled you steps compared to yesterday\n" +
+        assertEquals("You've nearly doubled you steps compared to yesterday\n" +
                 "Keep up the good work!", latestToast);
     }
 }

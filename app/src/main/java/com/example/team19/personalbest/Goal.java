@@ -31,7 +31,9 @@ public class Goal {
     }
 
     public void showMeetGoal(long goal) {
-        if (!checkIfDailyGoalShown("goal") && this.steps >= goal) {
+        if (checkIfDailyGoalShown("goal"))
+                return;
+        if (this.steps >= goal) {
             setDailyGoalShown("goal");
             try {
                 Button button = activity.findViewById(R.id.button_change_goal);
@@ -59,9 +61,9 @@ public class Goal {
                     editor.apply();
                 }
             }
+            else
+                prepareProgressCheck();
         }
-
-        prepareProgressCheck();
     }
 
     private void prepareProgressCheck() {
@@ -87,7 +89,7 @@ public class Goal {
     public void checkProgress(int stepYesterday, boolean nofriend) {
         if (nofriend) {
             if (stepYesterday > 0 && steps > stepYesterday * 1.8) {
-                Toast.makeText(activity, "You have doubled you steps compared to yesterday\n" +
+                Toast.makeText(activity, "You've nearly doubled you steps compared to yesterday\n" +
                         "Keep up the good work!", Toast.LENGTH_SHORT).show();
             }
         }

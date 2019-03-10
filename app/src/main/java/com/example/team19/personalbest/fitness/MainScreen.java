@@ -157,7 +157,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 startActivity(intent);
             }
         });
-        checkForEncouragement();
     }
 
     /**
@@ -242,7 +241,6 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
     @Override
     public void onResume() {
         Log.d(TAG, "MainScreen Resumed");
-        checkForEncouragement();
         super.onResume();
     }
 
