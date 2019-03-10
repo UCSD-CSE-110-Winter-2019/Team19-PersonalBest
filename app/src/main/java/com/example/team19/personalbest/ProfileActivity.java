@@ -26,13 +26,14 @@ import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private Users user;
-    private TextView mEmail;
-    private Button sendRequestButton;
-    private String user_id;
-    private DatabaseReference mFriendRequestDB;
-    private DatabaseReference mFriendDB;
-    private State current_state;
+    protected Users user;
+    protected TextView mEmail;
+    protected Button sendRequestButton;
+    protected String user_id;
+    protected DatabaseReference mFriendRequestDB;
+    protected DatabaseReference mFriendDB;
+
+    protected State current_state;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -200,7 +201,7 @@ public class ProfileActivity extends AppCompatActivity {
         sendRequestButton.setEnabled(true);
     }
 
-    private enum State {
+    protected enum State {
         FRIEND,
         STRANGER,
         REQUEST_SENT,
