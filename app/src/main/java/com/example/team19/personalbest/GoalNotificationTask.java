@@ -52,13 +52,14 @@ public class GoalNotificationTask extends TimerTask {
         createNotificationChannel();
 
         Intent intent = new Intent(service, MainScreen.class);
+        intent.putExtra("mainScreenFragment", "updateGoalFragment");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(service, 0, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(service, CHANNEL_ID)
         .setSmallIcon(R.mipmap.ic_launcher)
         .setContentTitle("Personal Best Goal Met!")
-        .setContentText("Congratulations on meeting your goal of " + goal + " steps! Set a new goal! Tap here to open the app.")
+        .setContentText("Congratulations on meeting your goal of " + goal + " steps!\nTap to set a new goal!")
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true);
