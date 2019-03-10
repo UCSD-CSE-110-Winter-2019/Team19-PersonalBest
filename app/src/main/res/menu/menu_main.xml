@@ -7,4 +7,8 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_friend_btn"
+        android:orderInCategory="101"
+        android:title="@string/menu_friends" />
 </menu>

@@ -99,6 +99,7 @@ public class ChartActivity extends AppCompatActivity {
         chart.setFitBars(true);
         chart.groupBars(0f, groupSpace, barSpace);
         chart.invalidate(); // refresh the chart
+        chart.setVisibleXRangeMaximum(28);
     }
 
     /**
