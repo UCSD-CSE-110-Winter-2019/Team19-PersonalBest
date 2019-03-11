@@ -30,7 +30,7 @@ public class FriendHistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chart);
+        setContentView(R.layout.activity_friend_history);
         user = (Users) getIntent().getSerializableExtra("user");
         chart = findViewById(R.id.chart);
 
