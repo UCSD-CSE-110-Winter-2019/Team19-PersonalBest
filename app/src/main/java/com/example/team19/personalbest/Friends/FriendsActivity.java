@@ -1,4 +1,4 @@
-package com.example.team19.personalbest;
+package com.example.team19.personalbest.Friends;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.team19.personalbest.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;

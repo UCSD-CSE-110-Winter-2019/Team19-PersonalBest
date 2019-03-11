@@ -1,7 +1,5 @@
 package com.example.team19.personalbest.fitness;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
@@ -17,12 +15,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.team19.personalbest.Auth;
 import com.example.team19.personalbest.ChartActivity;
 import com.example.team19.personalbest.Cloud;
-import com.example.team19.personalbest.CloudToLocalStorageMigration;
 import com.example.team19.personalbest.EnterNewGoalDialogFragment;
-import com.example.team19.personalbest.FriendsActivity;
+import com.example.team19.personalbest.Friends.FriendsActivity;
 import com.example.team19.personalbest.Goal;
 import com.example.team19.personalbest.R;
 import com.example.team19.personalbest.StepService;

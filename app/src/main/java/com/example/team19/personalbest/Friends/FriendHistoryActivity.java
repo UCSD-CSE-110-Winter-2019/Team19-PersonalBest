@@ -1,9 +1,10 @@
-package com.example.team19.personalbest;
+package com.example.team19.personalbest.Friends;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.team19.personalbest.R;
 import com.example.team19.personalbest.fitness.HistoryClient;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context=".Friends.ProfileActivity">
 
     <TextView
         android:id="@+id/profile_email"
@@ -52,4 +52,18 @@
         android:background="@color/design_default_color_primary"
         android:textColor="#ffffff"
         android:visibility="gone" />
+
+    <Button
+        android:layout_marginTop="10dp"
+        android:id="@+id/send_message_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/friend_history_btn"
+        android:text="@string/chat"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:textColor="#ffffff"
+        android:visibility="gone"/>
+
 </RelativeLayout>
