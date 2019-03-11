@@ -117,6 +117,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        Button decline_btn = findViewById(R.id.decline_btn);
+        decline_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (current_state == State.REQUEST_RECEIVED) {
+                    sendRequestButton.setEnabled(false);
+                    cancelRequest();
+                }
+            }
+        });
+
         view_history_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
