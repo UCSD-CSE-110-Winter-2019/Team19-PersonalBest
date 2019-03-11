@@ -78,6 +78,13 @@ public class ChatActivity extends AppCompatActivity {
         mMessages_list.setAdapter(mAdapter);
 
         loadMessages();
+
+        String input_text = getIntent().getStringExtra("input_text");
+        if (input_text != null) {
+            message_text.setText(input_text);
+            send_btn.performClick();
+        }
+
     }
 
     /**
