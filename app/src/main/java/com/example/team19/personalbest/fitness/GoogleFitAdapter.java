@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.team19.personalbest.Cloud;
+import com.example.team19.personalbest.GoalNotificationTask;
 import com.example.team19.personalbest.StepService;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -77,23 +78,25 @@ public class GoogleFitAdapter{
                                     Log.e(TAG, "failed", e);
                                 }
                             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
         }
 
         subScribeSteps();
 
+
         task = new TimerTask() {
             @Override
             public void run() {
                 GoogleFitAdapter.this.updateStepCount();
+                TimerTask notificationTask = new GoalNotificationTask(service);
+                Timer notificationTimer = new Timer();
+                notificationTimer.schedule(notificationTask, 0);
             }
         };
         t = new Timer();
         t.schedule(task, 0, 1000);
     }
-
     /**
      * make subscription to steps
      */
@@ -147,6 +150,7 @@ public class GoogleFitAdapter{
                                     Cloud.set("PersonalBest", date, total);
                                     lastStep = total;
                                 }
+
                             }
                         })
                 .addOnFailureListener(

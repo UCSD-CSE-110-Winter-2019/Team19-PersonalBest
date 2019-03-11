@@ -1,5 +1,7 @@
 package com.example.team19.personalbest.fitness;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
@@ -72,6 +74,20 @@ public class MainScreen extends AppCompatActivity implements Observer, EnterNewG
                 enterNewGoal(v);
             }
         });
+
+        String menuFragment = getIntent().getStringExtra("mainScreenFragment");
+
+        // Logic from:
+        // https://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android
+        // If menuFragment is defined, then this activity was launched with a fragment selection
+        if (menuFragment != null) {
+
+            // Here we can decide what do to -- perhaps load other parameters from the intent extras such as IDs, etc
+            if (menuFragment.equals("updateGoalFragment")) {
+                changeGoal.callOnClick();
+            }
+        }
+
 
         textSteps = findViewById(R.id.textSteps);
         Calendar cal = Calendar.getInstance();
