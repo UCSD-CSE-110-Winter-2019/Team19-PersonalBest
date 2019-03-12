@@ -90,7 +90,9 @@ public class ChatActivity extends AppCompatActivity {
      * Create the chat in firebase if not exist
      */
     private void createChat() {
-        mRootRef.child("Chat").child(Cloud.getMUser().getUid()).addValueEventListener(new ValueEventListener() {
+        mRootRef.child("Chat")
+                .child(Cloud.getMUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

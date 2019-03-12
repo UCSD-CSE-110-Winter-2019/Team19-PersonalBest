@@ -1,11 +1,11 @@
 package com.example.team19.personalbest.Friends;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
+
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -13,13 +13,15 @@ import com.example.team19.personalbest.Chat.ChatActivity;
 import com.example.team19.personalbest.Cloud;
 import com.example.team19.personalbest.R;
 import com.google.android.gms.internal.firebase_auth.zzcz;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.security.NoTypePermission;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,36 +37,28 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*, org.powermock.*"})
+@PowerMockIgnore({ "org.powermock.*", "org.mockito.*", "org.robolectric.*", "android.*", "androidx.*" })
 @PrepareForTest({Cloud.class, FirebaseDatabase.class})
 public class MessageTest {
-
-    public MessageTest() {
-        XStream xstream = new XStream();
-        // clear out existing permissions and set own ones
-        xstream.addPermission(NoTypePermission.NONE);
-        xstream.allowTypesByWildcard(new String[] {
-                "com.example.team19.personalbest.*"
-        });
-    }
 
     ChatActivity chatActivity;
     ImageButton send_btn;
     EditText message_text;
-    RecyclerView mMessages_list;
+    DatabaseReference dbRef;
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
-
-    @Rule
-    public InstantTaskExecutorRule rule2 = new InstantTaskExecutorRule();
 
     @Before
     public void before() {
@@ -187,11 +181,87 @@ public class MessageTest {
             }
         });
 
+        // mock static firebase stuff
         FirebaseDatabase db = mock(FirebaseDatabase.class);
+        dbRef = mock(DatabaseReference.class);
+        when(db.getReference()).thenReturn(dbRef);
+        when(dbRef.child(any())).thenReturn(dbRef);
+        when(dbRef.push()).thenReturn(dbRef);
+        when(dbRef.setValue(any())).thenReturn(new Task<Void>() {
+            @Override
+            public boolean isComplete() {
+                return false;
+            }
+
+            @Override
+            public boolean isSuccessful() {
+                return false;
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return false;
+            }
+
+            @Nullable
+            @Override
+            public Void getResult() {
+                return null;
+            }
+
+            @Nullable
+            @Override
+            public <X extends Throwable> Void getResult(@NonNull Class<X> aClass) throws X {
+                return null;
+            }
+
+            @Nullable
+            @Override
+            public Exception getException() {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Task<Void> addOnSuccessListener(@NonNull OnSuccessListener<? super Void> onSuccessListener) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Task<Void> addOnSuccessListener(@NonNull Executor executor, @NonNull OnSuccessListener<? super Void> onSuccessListener) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Task<Void> addOnSuccessListener(@NonNull Activity activity, @NonNull OnSuccessListener<? super Void> onSuccessListener) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Task<Void> addOnFailureListener(@NonNull OnFailureListener onFailureListener) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Task<Void> addOnFailureListener(@NonNull Executor executor, @NonNull OnFailureListener onFailureListener) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Task<Void> addOnFailureListener(@NonNull Activity activity, @NonNull OnFailureListener onFailureListener) {
+                return null;
+            }
+        });
+
         PowerMockito.mockStatic(FirebaseDatabase.class);
         when(FirebaseDatabase.getInstance()).thenReturn(db);
 
-        chatActivity = Robolectric.setupActivity(ChatActivity.class);
+        chatActivity = Robolectric.buildActivity(ChatActivity.class).create().get();
 
         message_text = chatActivity.findViewById(R.id.chat_message);
         send_btn = chatActivity.findViewById(R.id.chat_send_btn);
@@ -199,9 +269,13 @@ public class MessageTest {
 
     @Test
     public void messageSend() {
+        assertEquals(message_text.getText().toString(), "");
         message_text.setText("test message");
+        assertEquals(message_text.getText().toString(), "test message");
         send_btn.performClick();
 
-
+        verify(dbRef, atLeastOnce()).updateChildren(any(), any());
+        verify(dbRef, atLeastOnce()).child(any());
+        assertEquals(message_text.getText().toString(), "");
     }
 }

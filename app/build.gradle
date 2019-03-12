@@ -20,7 +20,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    testOptions.unitTests.includeAndroidResources = true
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
     lintOptions {
         disable 'GradleCompatible'
     }
@@ -42,23 +47,24 @@ dependencies {
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'junit:junit:4.12'
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-database:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-database:16.1.0'
     implementation 'com.firebaseui:firebase-ui-database:4.3.1'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.15.0'
+    testImplementation 'junit:junit:4.13-beta-2'
+    testImplementation 'org.mockito:mockito-core:2.25.0'
     testImplementation 'org.powermock:powermock-core:2.0.0'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.0'
     testImplementation 'org.powermock:powermock-module-junit4-rule:2.0.0'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.0'
-    testImplementation 'org.powermock:powermock-classloading-xstream:2.0.0'
+    testImplementation 'org.powermock:powermock-classloading-xstream:1.7.4'
 
-    testImplementation 'androidx.arch.core:core-testing:2.0.0-beta01'
-    testImplementation 'org.robolectric:robolectric:4.1'
+    testImplementation 'androidx.test:core:1.0.0'
+    testImplementation 'androidx.arch.core:core-testing:2.0.0'
+    testImplementation 'org.robolectric:robolectric:4.0'
     testImplementation 'io.reactivex.rxjava2:rxjava:2.2.7'
     testImplementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
