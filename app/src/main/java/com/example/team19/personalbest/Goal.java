@@ -2,8 +2,8 @@ package com.example.team19.personalbest;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -76,7 +76,7 @@ public class Goal {
         friendDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(Cloud.mUser.getUid())) {
+                if (dataSnapshot.hasChild(Cloud.getMUser().getUid())) {
                     checkProgress(stepYesterday, true);
                 }
             }

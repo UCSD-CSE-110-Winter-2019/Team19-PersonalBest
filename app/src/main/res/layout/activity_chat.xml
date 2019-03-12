@@ -11,7 +11,7 @@
         android:id="@+id/chat_app_bar"
         layout="@layout/app_bar_layout" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

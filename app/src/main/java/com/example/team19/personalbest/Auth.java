@@ -2,11 +2,9 @@ package com.example.team19.personalbest;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.team19.personalbest.fitness.MainScreen;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,8 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import static com.google.android.gms.common.ConnectionResult.INTERNAL_ERROR;
 
 public class Auth {
     private static final int RC_GET_TOKEN = 9002;
@@ -109,7 +105,7 @@ public class Auth {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            Cloud.mUser = user;
+                            Cloud.setMUser(user);
                             CloudToLocalStorageMigration c2lsM = new CloudToLocalStorageMigration(mActivity);
                             c2lsM.MigrateData(runnable);
 

@@ -1,6 +1,6 @@
 package com.example.team19.personalbest.fitness;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.example.team19.personalbest.WalkActivity;

@@ -1,8 +1,8 @@
 package com.example.team19.personalbest.Friends;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -59,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         current_state = State.STRANGER;
 
-        mFriendRequestDB.child(Cloud.mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mFriendRequestDB.child(Cloud.getMUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(user_id)) {
@@ -76,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    mFriendDB.child(Cloud.mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mFriendDB.child(Cloud.getMUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.hasChild(user_id)) {
@@ -155,19 +155,19 @@ public class ProfileActivity extends AppCompatActivity {
         final String current_date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
                 .format(new Date());
 
-        mFriendDB.child(Cloud.mUser.getUid()).child(user_id).child("date").setValue(current_date)
+        mFriendDB.child(Cloud.getMUser().getUid()).child(user_id).child("date").setValue(current_date)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        mFriendDB.child(user_id).child(Cloud.mUser.getUid()).child("date").setValue(current_date)
+                        mFriendDB.child(user_id).child(Cloud.getMUser().getUid()).child("date").setValue(current_date)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        mFriendRequestDB.child(Cloud.mUser.getUid()).child(user_id).removeValue()
+                                        mFriendRequestDB.child(Cloud.getMUser().getUid()).child(user_id).removeValue()
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        mFriendRequestDB.child(user_id).child(Cloud.mUser.getUid()).removeValue()
+                                                        mFriendRequestDB.child(user_id).child(Cloud.getMUser().getUid()).removeValue()
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void aVoid) {
@@ -186,11 +186,11 @@ public class ProfileActivity extends AppCompatActivity {
      * Cancels the friend request sent to the user shown on the current profile page
      */
     private void cancelRequest() {
-        mFriendRequestDB.child(Cloud.mUser.getUid()).child(user_id).removeValue()
+        mFriendRequestDB.child(Cloud.getMUser().getUid()).child(user_id).removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        mFriendRequestDB.child(user_id).child(Cloud.mUser.getUid()).removeValue()
+                        mFriendRequestDB.child(user_id).child(Cloud.getMUser().getUid()).removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -208,14 +208,14 @@ public class ProfileActivity extends AppCompatActivity {
      * Sends friend request to the user shown on the current profile page
      */
     private void sendRequest() {
-        mFriendRequestDB.child(Cloud.mUser.getUid()).child(user_id).child("request_type")
+        mFriendRequestDB.child(Cloud.getMUser().getUid()).child(user_id).child("request_type")
                 .setValue("sent")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
                         if (task.isSuccessful()) {
-                            mFriendRequestDB.child(user_id).child(Cloud.mUser.getUid()).child("request_type")
+                            mFriendRequestDB.child(user_id).child(Cloud.getMUser().getUid()).child("request_type")
                                     .setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
