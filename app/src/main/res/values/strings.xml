@@ -32,4 +32,6 @@
     <string name="accept_friend_request">Accept Request</string>
     <string name="view_friend_history">VIEW HISTORY</string>
     <string name="chat">CHAT</string>
+    <string name="message_hint">Enter Message...</string>
+    <string name="default_text">default</string>
 </resources>

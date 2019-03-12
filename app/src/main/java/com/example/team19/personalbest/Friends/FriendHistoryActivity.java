@@ -1,9 +1,15 @@
-package com.example.team19.personalbest;
+package com.example.team19.personalbest.Friends;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.example.team19.personalbest.Chat.ChatActivity;
+import com.example.team19.personalbest.R;
 import com.example.team19.personalbest.fitness.HistoryClient;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -22,9 +28,13 @@ import java.util.Map;
 
 public class FriendHistoryActivity extends AppCompatActivity {
 
+    private EditText message_text;
+    private Button send_btn;
     private BarChart chart;
     private List<BarEntry> entriesStep;
     private HistoryClient history;
+    private String user_id;
+
     Users user;
 
     @Override
@@ -32,10 +42,20 @@ public class FriendHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_history);
         user = (Users) getIntent().getSerializableExtra("user");
+        user_id = getIntent().getStringExtra("user_id");
         chart = findViewById(R.id.chart);
 
         history = new FriendHistoryClient(user, System.currentTimeMillis());
         updateChart();
+
+        message_text = findViewById(R.id.history_chat_text);
+        send_btn = findViewById(R.id.history_send_btn);
+        send_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
     }
 
     public BarChart getChart() {
@@ -99,6 +119,16 @@ public class FriendHistoryActivity extends AppCompatActivity {
     public void setHistoryClient(HistoryClient history) {
         this.history = history;
         updateChart();
+    }
+
+    private void sendMessage() {
+        String text = message_text.getText().toString();
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("user_email", user.getEmail());
+        intent.putExtra("user_id", user_id);
+        intent.putExtra("input_text", text);
+        startActivity(intent);
+        message_text.setText("");
     }
 
 }

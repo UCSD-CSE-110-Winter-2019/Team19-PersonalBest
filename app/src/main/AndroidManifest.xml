@@ -14,10 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".FriendHistoryActivity"></activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".Chat.ChatActivity"></activity>
+        <activity android:name=".Friends.FriendHistoryActivity" />
+        <activity android:name=".Friends.ProfileActivity" />
         <activity
-            android:name=".FriendsActivity"
+            android:name=".Friends.FriendsActivity"
             android:parentActivityName=".fitness.MainScreen" />
         <activity android:name=".fitness.MainScreen" />
         <activity android:name=".InitActivity" />
@@ -42,6 +43,7 @@
         <activity
             android:name=".ChartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

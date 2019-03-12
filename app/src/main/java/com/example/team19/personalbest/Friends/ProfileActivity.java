@@ -1,4 +1,4 @@
-package com.example.team19.personalbest;
+package com.example.team19.personalbest.Friends;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.team19.personalbest.fitness.MainScreen;
+import com.example.team19.personalbest.Chat.ChatActivity;
+import com.example.team19.personalbest.Cloud;
+import com.example.team19.personalbest.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -21,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -34,6 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected DatabaseReference mFriendRequestDB;
     protected DatabaseReference mFriendDB;
     protected Button view_history_btn;
+    protected Button send_message_btn;
 
     protected State current_state;
 
@@ -43,6 +45,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         view_history_btn = findViewById(R.id.friend_history_btn);
+        send_message_btn = findViewById(R.id.send_message_btn);
+
         user_id = getIntent().getStringExtra("user_id");
         user = ( Users) getIntent().getSerializableExtra("User");
 
@@ -79,6 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 current_state = State.FRIEND;
                                 sendRequestButton.setEnabled(false);
                                 view_history_btn.setVisibility(View.VISIBLE);
+                                send_message_btn.setVisibility(View.VISIBLE);
                             }
                         }
 
@@ -134,6 +139,13 @@ public class ProfileActivity extends AppCompatActivity {
                 viewHistory();
             }
         });
+
+        send_message_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
     }
 
     /**
@@ -143,11 +155,11 @@ public class ProfileActivity extends AppCompatActivity {
         final String current_date = new SimpleDateFormat("dd-MM-yyyy", Locale.US)
                 .format(new Date());
 
-        mFriendDB.child(Cloud.mUser.getUid()).child(user_id).setValue(current_date)
+        mFriendDB.child(Cloud.mUser.getUid()).child(user_id).child("date").setValue(current_date)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        mFriendDB.child(user_id).child(Cloud.mUser.getUid()).setValue(current_date)
+                        mFriendDB.child(user_id).child(Cloud.mUser.getUid()).child("date").setValue(current_date)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -233,6 +245,14 @@ public class ProfileActivity extends AppCompatActivity {
     private void viewHistory() {
         Intent intent = new Intent(this, FriendHistoryActivity.class);
         intent.putExtra("user", user);
+        intent.putExtra("user_id", user_id);
+        startActivity(intent);
+    }
+
+    private void sendMessage() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("user_id", user_id);
+        intent.putExtra("user_email", user.getEmail());
         startActivity(intent);
     }
 }

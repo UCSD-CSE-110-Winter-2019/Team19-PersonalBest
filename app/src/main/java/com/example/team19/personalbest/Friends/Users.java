@@ -1,4 +1,4 @@
-package com.example.team19.personalbest;
+package com.example.team19.personalbest.Friends;
 
 import java.io.Serializable;
 import java.util.Map;

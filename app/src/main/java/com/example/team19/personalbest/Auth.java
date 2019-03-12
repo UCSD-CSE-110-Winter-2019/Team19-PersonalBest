@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import static com.google.android.gms.common.ConnectionResult.INTERNAL_ERROR;
 
@@ -103,6 +104,7 @@ public class Auth {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -112,6 +114,10 @@ public class Auth {
                             c2lsM.MigrateData(runnable);
 
                             Cloud.set("", "Email", account.getEmail());
+
+                            // stores the device tokenID for the user
+                            String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                            Cloud.set("", "device_token", deviceToken);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
