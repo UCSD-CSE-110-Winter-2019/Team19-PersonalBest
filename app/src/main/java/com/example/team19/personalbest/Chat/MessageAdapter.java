@@ -1,7 +1,7 @@
 package com.example.team19.personalbest.Chat;
 
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(MessageViewHolder viewHolder, int i) {
-        String current_user_id = Cloud.mUser.getUid();
+        String current_user_id = Cloud.getMUser().getUid();
         Messages c = mMessageList.get(i);
         String from_id = c.getfrom();
 

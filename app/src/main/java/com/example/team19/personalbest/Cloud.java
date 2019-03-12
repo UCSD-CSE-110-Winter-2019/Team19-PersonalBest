@@ -1,6 +1,6 @@
 package com.example.team19.personalbest;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -15,10 +15,18 @@ import com.google.firebase.database.ValueEventListener;
 public class Cloud {
     private static final String USERS = "users";
     private static final String TAG = "CLOUD";
-    public static FirebaseUser mUser;
+    private static FirebaseUser mUser;
 
     private static boolean isUserReady() {
         return mUser != null;
+    }
+
+    public static FirebaseUser getMUser() {
+        return mUser;
+    }
+
+    public static void setMUser(FirebaseUser u) {
+        mUser = u;
     }
 
     public static void get(String namespace, String key, final CloudCallback cc) {

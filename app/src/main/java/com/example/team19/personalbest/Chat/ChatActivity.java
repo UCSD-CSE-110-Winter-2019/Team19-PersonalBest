@@ -1,18 +1,16 @@
 package com.example.team19.personalbest.Chat;
 
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import com.example.team19.personalbest.Cloud;
 import com.example.team19.personalbest.R;
@@ -92,7 +90,7 @@ public class ChatActivity extends AppCompatActivity {
      * Create the chat in firebase if not exist
      */
     private void createChat() {
-        mRootRef.child("Chat").child(Cloud.mUser.getUid()).addValueEventListener(new ValueEventListener() {
+        mRootRef.child("Chat").child(Cloud.getMUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -102,8 +100,8 @@ public class ChatActivity extends AppCompatActivity {
                     chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
 
                     Map chatUserMap = new HashMap();
-                    chatUserMap.put("Chat/" + Cloud.mUser.getUid() + "/" + user_id, chatAddMap);
-                    chatUserMap.put("Chat/" + user_id + "/" + Cloud.mUser.getUid(), chatAddMap);
+                    chatUserMap.put("Chat/" + Cloud.getMUser().getUid() + "/" + user_id, chatAddMap);
+                    chatUserMap.put("Chat/" + user_id + "/" + Cloud.getMUser().getUid(), chatAddMap);
 
                     mRootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
                         @Override
@@ -134,10 +132,10 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-        String current_user_ref = "messages/" + Cloud.mUser.getUid() + "/" + user_id;
-        String chat_user_ref = "messages/" + user_id + "/" + Cloud.mUser.getUid();
+        String current_user_ref = "messages/" + Cloud.getMUser().getUid() + "/" + user_id;
+        String chat_user_ref = "messages/" + user_id + "/" + Cloud.getMUser().getUid();
 
-        DatabaseReference user_message_push = mRootRef.child("messages").child(Cloud.mUser.getUid())
+        DatabaseReference user_message_push = mRootRef.child("messages").child(Cloud.getMUser().getUid())
                 .child(user_id);
 
         long time = System.currentTimeMillis();
@@ -146,7 +144,7 @@ public class ChatActivity extends AppCompatActivity {
         Map messageMap = new HashMap();
         messageMap.put("message", message);
         messageMap.put("time", time);
-        messageMap.put("from", Cloud.mUser.getUid());
+        messageMap.put("from", Cloud.getMUser().getUid());
 
         Map messageUsermap = new HashMap();
         messageUsermap.put(current_user_ref + "/" + timeS, messageMap);
@@ -167,7 +165,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadMessages() {
-        mRootRef.child("messages").child(Cloud.mUser.getUid()).child(user_id).addChildEventListener(new ChildEventListener() {
+        mRootRef.child("messages").child(Cloud.getMUser().getUid()).child(user_id).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Messages message = dataSnapshot.getValue(Messages.class);
@@ -201,7 +199,7 @@ public class ChatActivity extends AppCompatActivity {
     private void notifyUser() {
         DatabaseReference notificationRef = mRootRef.child("notifications");
         HashMap<String, String> notificationData = new HashMap<>();
-        notificationData.put("from", Cloud.mUser.getUid());
+        notificationData.put("from", Cloud.getMUser().getUid());
 
         notificationRef.child(user_id).push().setValue(notificationData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
