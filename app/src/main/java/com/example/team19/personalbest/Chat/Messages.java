@@ -16,27 +16,27 @@ public class Messages {
         this.time = time;
     }
 
-    public String getMessage() {
+    public String getmessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setmessage(String message) {
         this.message = message;
     }
 
-    public long getTime() {
+    public long gettime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void settime(long time) {
         this.time = time;
     }
 
-    public String getFrom() {
+    public String getfrom() {
         return from;
     }
 
-    public void setFrom(String from) {
+    public void setfrom(String from) {
         this.from = from;
     }
 }

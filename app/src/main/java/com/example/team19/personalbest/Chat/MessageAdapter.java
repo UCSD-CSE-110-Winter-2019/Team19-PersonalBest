@@ -2,6 +2,7 @@ package com.example.team19.personalbest.Chat;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,20 +44,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(MessageViewHolder viewHolder, int i) {
         String current_user_id = Cloud.mUser.getUid();
         Messages c = mMessageList.get(i);
-        String from_id = c.getFrom();
+        String from_id = c.getfrom();
 
         if (from_id.equals(current_user_id)) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewHolder.messageText.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            viewHolder.messageText.setTextColor(Color.WHITE);
             viewHolder.messageText.setLayoutParams(params);
+            viewHolder.messageText.setBackgroundResource(R.drawable.message_text_background);
         }
         else {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewHolder.messageText.getLayoutParams();
+            params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             viewHolder.messageText.setBackgroundResource(R.drawable.message_text_background);
             viewHolder.messageText.setBackgroundColor(Color.WHITE);
             viewHolder.messageText.setTextColor(Color.BLACK);
+            viewHolder.messageText.setLayoutParams(params);
         }
 
-        viewHolder.messageText.setText(c.getMessage());
+        Log.d("Changing message layout", from_id);
+        viewHolder.messageText.setText(c.getmessage());
     }
 
     @Override

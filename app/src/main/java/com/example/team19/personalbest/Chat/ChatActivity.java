@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.example.team19.personalbest.Cloud;
 import com.example.team19.personalbest.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -137,18 +138,19 @@ public class ChatActivity extends AppCompatActivity {
         String chat_user_ref = "messages/" + user_id + "/" + Cloud.mUser.getUid();
 
         DatabaseReference user_message_push = mRootRef.child("messages").child(Cloud.mUser.getUid())
-                .child(user_id).push();
+                .child(user_id);
 
-        String push_id = user_message_push.getKey();
+        long time = System.currentTimeMillis();
+        String timeS = String.valueOf(time);
 
         Map messageMap = new HashMap();
         messageMap.put("message", message);
-        messageMap.put("time", ServerValue.TIMESTAMP);
+        messageMap.put("time", time);
         messageMap.put("from", Cloud.mUser.getUid());
 
         Map messageUsermap = new HashMap();
-        messageUsermap.put(current_user_ref + "/" + push_id, messageMap);
-        messageUsermap.put(chat_user_ref + "/" + push_id, messageMap);
+        messageUsermap.put(current_user_ref + "/" + timeS, messageMap);
+        messageUsermap.put(chat_user_ref + "/" + timeS, messageMap);
 
         message_text.setText("");
 
@@ -161,6 +163,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        notifyUser();
     }
 
     private void loadMessages() {
@@ -191,6 +194,19 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    private void notifyUser() {
+        DatabaseReference notificationRef = mRootRef.child("notifications");
+        HashMap<String, String> notificationData = new HashMap<>();
+        notificationData.put("from", Cloud.mUser.getUid());
+
+        notificationRef.child(user_id).push().setValue(notificationData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("CHAT ACTIVITY", "Notification sent to user");
             }
         });
     }
