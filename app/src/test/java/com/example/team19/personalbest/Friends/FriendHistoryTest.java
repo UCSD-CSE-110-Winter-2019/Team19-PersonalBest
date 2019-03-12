@@ -1,10 +1,7 @@
-package com.example.team19.personalbest;
+package com.example.team19.personalbest.Friends;
 
 import android.content.Intent;
 
-import com.example.team19.personalbest.Friends.FriendHistoryActivity;
-import com.example.team19.personalbest.Friends.FriendHistoryClient;
-import com.example.team19.personalbest.Friends.Users;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarDataSet;
 
